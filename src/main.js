@@ -6,7 +6,7 @@ import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 
-axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com/';
+axios.defaults.baseURL = 'http://localhost:3000/v1/';
 Vue.use(VueAxios, axios);
 
 Vue.config.productionTip = false;
