@@ -17,7 +17,12 @@
       <v-divider></v-divider>
 
       <v-list dense>
-        <v-list-item class="ma-2" v-for="item in items" :key="item.title" :to="item.path">
+        <v-list-item
+          class="ma-2"
+          v-for="item in items"
+          :key="item.title"
+          :to="item.path"
+        >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
@@ -39,9 +44,12 @@ export default {
   data: () => ({
     drawer: true,
     items: [
-      { title: 'Home', icon: 'mdi-home-city', path: '/' },
-      { title: 'My Account', icon: 'mdi-account', path: '/about' },
+      { title: 'Home', icon: 'mdi-home-outline', path: '/' },
+      { title: 'Shop', icon: 'mdi-store-outline', path: '/shop' },
       { title: 'Users', icon: 'mdi-account-group-outline', path: '/users' },
+      { title: 'Orders', icon: 'mdi-cart-outline', path: '/orders' },
+      { title: 'Statistics', icon: 'mdi-finance', path: '/statistics' },
+      { title: 'Transactions', icon: 'mdi-credit-card-outline', path: '/transactions' },
     ],
     mini: false,
   }),
