@@ -1,12 +1,10 @@
 <template>
   <v-card>
     <v-card-title class="d-flex justify-space-between mb-6">
-      <AddUserForm
-      title="Add user"
-      buttonText="Add User"/>
+      <AddUserForm title="Add user" buttonText="Add User" />
 
       <v-btn @click="getUsersFromApi()">
-          <v-icon>mdi-reload</v-icon>
+        <v-icon>mdi-reload</v-icon>
       </v-btn>
     </v-card-title>
     <v-data-table :headers="headers" :items="users"></v-data-table>
