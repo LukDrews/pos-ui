@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="d-flex justify-space-between mb-6">
-      <AddUserForm title="Add user" buttonText="Add User" />
+      <AddUserForm @update-users="getUsersFromApi()" />
 
       <v-btn @click="getUsersFromApi()">
         <v-icon>mdi-reload</v-icon>

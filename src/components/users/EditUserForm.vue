@@ -1,5 +1,11 @@
 <template>
-  <UserForm title="Add user" buttonText="Add user" @on-confirm="onConfirm" />
+  <UserForm
+    title="Edit user"
+    buttonText="Edit"
+    :item="item"
+    small
+    @on-confirm="onConfirm"
+  />
 </template>
 
 <script>
@@ -10,10 +16,15 @@ export default {
   components: {
     UserForm,
   },
+  props: {
+    item: {
+      type: Object,
+    },
+  },
   methods: {
     onConfirm(form) {
       this.axios
-        .post('users', {
+        .put(`users/${this.item.uuid}`, {
           firstName: form.firstName,
           lastName: form.lastName,
           birthDate: form.date,
@@ -22,7 +33,7 @@ export default {
         })
         .then(() => {
           this.$emit('update-users');
-          console.log('Add user: ', form);
+          console.log('Update item: ', form);
         });
     },
   },
