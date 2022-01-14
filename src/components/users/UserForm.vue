@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs" :small="small" v-on="on" @click="openForm()">
-          {{ buttonText }}
+          <slot/>
         </v-btn>
       </template>
       <v-card>
@@ -128,10 +128,6 @@ export default {
       type: String,
       required: true,
     },
-    buttonText: {
-      type: String,
-      required: true,
-    },
     confirmText: {
       type: String,
       default: 'Save',
@@ -200,7 +196,7 @@ export default {
     },
     onConfirm() {
       if (this.$refs.form.validate()) {
-        this.$emit('on-confirm', this.form);
+        this.$emit('on-confirm', this.form, this.item);
         this.dialog = false;
         this.$refs.form.reset();
       }

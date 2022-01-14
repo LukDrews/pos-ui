@@ -1,9 +1,9 @@
 <template>
   <v-card>
     <v-card-title class="d-flex justify-space-between mb-6">
-      <AddUserForm @update-users="getUsersFromApi()" />
+      <UserForm title="Add user" @on-confirm="addUser"> Add User </UserForm>
 
-      <v-btn @click="getUsersFromApi()">
+      <v-btn @click="getUsers()">
         <v-icon>mdi-reload</v-icon>
       </v-btn>
     </v-card-title>
@@ -17,7 +17,18 @@
       >
         <!-- Source: https://stackoverflow.com/a/59084212 -->
         <template v-slot:item.controls="props">
-          <EditUserForm :item="props.item" @update-users="getUsersFromApi()" />
+          <div class="d-flex justify-end">
+            <UserForm
+              title="Edit user"
+              :item="props.item"
+              small
+              @on-confirm="updateUser"
+            >
+              <v-icon>mdi-square-edit-outline</v-icon>
+            </UserForm>
+            <div class="ms-2"></div>
+            <DeleteUserDialog :item="props.item" @delete-user="deleteUser" />
+          </div>
         </template>
       </v-data-table>
     </div>
@@ -34,21 +45,22 @@
 </template>
 
 <script>
-import AddUserForm from '../components/users/AddUserForm.vue';
-import EditUserForm from '../components/users/EditUserForm.vue';
+import UserForm from '../components/users/UserForm.vue';
+import DeleteUserDialog from '../components/users/DeleteUserDialog.vue';
 
 export default {
   name: 'Users',
   components: {
-    AddUserForm,
-    EditUserForm,
+    UserForm,
+    DeleteUserDialog,
   },
   data() {
     return {
       loadingUsers: true,
       headers: [
-        { text: 'Name', value: 'name', width: '31%' },
-        { text: 'Group', value: 'group.name', width: '31%' },
+        { text: 'First name', value: 'firstName' },
+        { text: 'Last name', value: 'lastName' },
+        { text: 'Group', value: 'group.name' },
         { text: 'Date', value: 'birthDate' },
         {
           text: '',
@@ -61,10 +73,10 @@ export default {
     };
   },
   created() {
-    this.getUsersFromApi();
+    this.getUsers();
   },
   methods: {
-    getUsersFromApi() {
+    getUsers() {
       this.loadingUsers = true;
       this.axios.get('users').then((response) => {
         this.users = response.data.map((user) => ({
@@ -73,6 +85,40 @@ export default {
         }));
         this.loadingUsers = false;
         console.log(this.users);
+      });
+    },
+    addUser(form) {
+      this.axios
+        .post('users', {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          birthDate: form.date,
+          group: form.group,
+          role: form.role,
+        })
+        .then(() => {
+          this.getUsers();
+          console.log('Add user: ', form);
+        });
+    },
+    updateUser(form, selectedItem) {
+      this.axios
+        .put(`users/${selectedItem.uuid}`, {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          birthDate: form.date,
+          group: form.group,
+          role: form.role,
+        })
+        .then(() => {
+          this.getUsers();
+          console.log('Update item: ', form);
+        });
+    },
+    deleteUser(item) {
+      this.loadingUsers = true;
+      this.axios.delete(`users/${item.uuid}`).then(() => {
+        this.getUsers();
       });
     },
     edit(item) {
