@@ -15,24 +15,32 @@
         :loading="loadingUsers"
         :items-per-page="-1"
       >
+        <template v-slot:item.avatar="{ item }">
+          <v-avatar size="36">
+            <v-img :src="item.imageLink" :alt="item.firstName" />
+          </v-avatar>
+        </template>
+
         <!-- Source: https://stackoverflow.com/a/59084212 -->
-        <template v-slot:item.controls="props">
+        <!-- https://vuetifyjs.com/en/components/data-tables/#item -->
+        <template v-slot:item.controls="{ item }">
           <div class="d-flex justify-end">
             <UserForm
               title="Edit user"
-              :item="props.item"
+              :item="item"
               small
               @on-confirm="updateUser"
             >
               <v-icon>mdi-square-edit-outline</v-icon>
             </UserForm>
             <div class="ms-2"></div>
-            <DeleteUserDialog :item="props.item" @delete-user="deleteUser" />
+            <DeleteUserDialog :item="item" @delete-user="deleteUser" />
           </div>
         </template>
       </v-data-table>
     </div>
     <div v-else>
+      <!-- https://marinaaisa.com/blog/design-and-code-skeletons-screens -->
       <v-skeleton-loader
         type="table-tbody, table-tfoot"
         :types="{
@@ -58,6 +66,7 @@ export default {
     return {
       loadingUsers: true,
       headers: [
+        { text: '', value: 'avatar', sortable: false },
         { text: 'First name', value: 'firstName' },
         { text: 'Last name', value: 'lastName' },
         { text: 'Group', value: 'group.name' },
@@ -88,18 +97,17 @@ export default {
       });
     },
     addUser(form) {
-      this.axios
-        .post('users', {
-          firstName: form.firstName,
-          lastName: form.lastName,
-          birthDate: form.date,
-          group: form.group,
-          role: form.role,
-        })
-        .then(() => {
-          this.getUsers();
-          console.log('Add user: ', form);
-        });
+      const formData = new FormData();
+      formData.append('firstName', form.firstName);
+      formData.append('lastName', form.lastName);
+      formData.append('birthDate', form.date);
+      formData.append('group', form.group);
+      formData.append('role', form.role);
+
+      this.axios.post('users', formData).then(() => {
+        this.getUsers();
+        console.log('Add user: ', form);
+      });
     },
     updateUser(form, selectedItem) {
       this.axios

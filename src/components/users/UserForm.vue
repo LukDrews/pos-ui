@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs" :small="small" v-on="on" @click="openForm()">
-          <slot/>
+          <slot />
         </v-btn>
       </template>
       <v-card>
@@ -13,6 +13,22 @@
         <v-card-text>
           <v-form ref="form">
             <v-container>
+              <v-row justify="center">
+                <v-avatar size="150">
+                  <v-img
+                    aspect-ratio="1"
+                    v-if="item"
+                    :src="item.imageLink"
+                    :alt="item.firstName + ' ' + item.lastName"
+                  />
+                  <v-img
+                    aspect-ratio="1"
+                    v-if="!item"
+                    src="http://localhost:3000/static/images/default/avatar.png"
+                    aIlt="Upload Image"
+                  />
+                </v-avatar>
+              </v-row>
               <v-row>
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
