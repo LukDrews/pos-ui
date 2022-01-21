@@ -7,7 +7,7 @@
         <v-icon>mdi-reload</v-icon>
       </v-btn>
     </v-card-title>
-    <div v-if="users.length > 0">
+    <div v-if="users !== null">
       <v-data-table
         class="pa-4"
         :headers="headers"
@@ -78,7 +78,7 @@ export default {
           align: 'right',
         },
       ],
-      users: [],
+      users: null,
     };
   },
   created() {
