@@ -1,8 +1,8 @@
 /* eslint-disable import/no-cycle */
-import { Model } from '@vuex-orm/core';
-// import { OrderItem } from '.';
+import ApiBase from './ApiBase';
+import { OrderItem } from '.';
 
-export default class Product extends Model {
+export default class Product extends ApiBase {
   static entity = 'products';
 
   static primaryKey = 'uuid';
@@ -13,13 +13,12 @@ export default class Product extends Model {
       name: this.attr(null),
       price: this.number(null),
       barcode: this.string(null),
-      //   orderItems: this.hansMany(OrderItem, 'productUuid'),
+      orderItems: this.hasMany(OrderItem, 'productUuid'),
     };
   }
 
-  static baseUrl = '/products';
-
-  static fetch() {
-    return this.api().get(this.baseUrl);
-  }
+  static apiConfig = {
+    ...super.apiConfig,
+    url: '/products',
+  };
 }

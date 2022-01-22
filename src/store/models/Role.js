@@ -1,8 +1,8 @@
 /* eslint-disable import/no-cycle */
-import { Model } from '@vuex-orm/core';
-import User from './User';
+import ApiBase from './ApiBase';
+import { User } from '.';
 
-export default class Role extends Model {
+export default class Role extends ApiBase {
   static entity = 'roles';
 
   static primaryKey = 'uuid';
@@ -15,9 +15,8 @@ export default class Role extends Model {
     };
   }
 
-  static baseUrl = '/roles';
-
-  static fetch() {
-    return this.api().get(this.baseUrl);
-  }
+  static apiConfig = {
+    ...super.apiConfig,
+    url: '/roles',
+  };
 }

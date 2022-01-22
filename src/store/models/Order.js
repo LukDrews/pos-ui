@@ -1,9 +1,8 @@
 /* eslint-disable import/no-cycle */
-import { Model } from '@vuex-orm/core';
-import User from './User';
-import OrderItem from './OrderItem';
+import ApiBase from './ApiBase';
+import { User, OrderItem } from '.';
 
-export default class Order extends Model {
+export default class Order extends ApiBase {
   static entity = 'orders';
 
   static primaryKey = 'uuid';
@@ -18,9 +17,8 @@ export default class Order extends Model {
     };
   }
 
-  static baseUrl = '/orders';
-
-  static fetch() {
-    return this.api().get(this.baseUrl);
-  }
+  static apiConfig = {
+    ...super.apiConfig,
+    url: '/orders',
+  };
 }

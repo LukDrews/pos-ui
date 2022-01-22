@@ -1,8 +1,8 @@
 /* eslint-disable import/no-cycle */
-import { Model } from '@vuex-orm/core';
+import ApiBase from './ApiBase';
 import { Product } from '.';
 
-export default class CartItem extends Model {
+export default class CartItem extends ApiBase {
   static entity = 'cartItems';
 
   static primaryKey = 'uuid';
@@ -16,9 +16,8 @@ export default class CartItem extends Model {
     };
   }
 
-  static baseUrl = '/cart';
-
-  static fetch() {
-    return this.api().get(this.baseUrl);
-  }
+  static apiConfig = {
+    ...super.apiConfig,
+    url: '/cart',
+  };
 }

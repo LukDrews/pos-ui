@@ -1,8 +1,8 @@
 /* eslint-disable import/no-cycle */
-import { Model } from '@vuex-orm/core';
+import ApiBase from './ApiBase';
 import { Role, Group, Order } from '.';
 
-export default class User extends Model {
+export default class User extends ApiBase {
   static entity = 'users';
 
   static primaryKey = 'uuid';
@@ -28,52 +28,22 @@ export default class User extends Model {
     return `${this.firstName} ${this.lastName}`;
   }
 
-  static baseUrl = '/users';
-
   static apiConfig = {
-    url: this.baseUrl, // pass url to fetch, get, create ...
-    actions: {
-      $fetch() {
-        return this.get(`${this.model.apiConfig.url}`);
-      },
-      $get(uuid) {
-        return this.get(`${this.model.apiConfig.url}/${uuid}`);
-      },
-      $create(data) {
-        return this.post(`${this.model.apiConfig.url}`, data);
-      },
-      $update(uuid, data) {
-        return this.put(`${this.model.apiConfig.url}/${uuid}`, data);
-      },
-      $delete(uuid) {
-        return this.$delete(`${this.model.apiConfig.url}/${uuid}`);
-      },
-    },
+    ...super.apiConfig,
+    url: '/users',
   };
-
-  static fetch() {
-    return this.api().$fetch();
-  }
-
-  static get(uuid) {
-    return this.api().$get(uuid);
-  }
 
   static add(user) {
     const formData = new FormData();
     Object.keys(user).forEach((key) => formData.append(key, user[key]));
 
-    return this.api().$create(formData);
+    return super.add(formData);
   }
 
   static update(uuid, user) {
     const formData = new FormData();
     Object.keys(user).forEach((key) => formData.append(key, user[key]));
 
-    return this.api().$update(uuid, formData);
-  }
-
-  static delete(uuid) {
-    return this.api().$delete(uuid);
+    return super.update(uuid, formData);
   }
 }

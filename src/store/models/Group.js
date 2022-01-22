@@ -1,8 +1,8 @@
 /* eslint-disable import/no-cycle */
-import { Model } from '@vuex-orm/core';
-import User from './User';
+import ApiBase from './ApiBase';
+import { User } from '.';
 
-export default class Group extends Model {
+export default class Group extends ApiBase {
   static entity = 'groups';
 
   static primaryKey = 'uuid';
@@ -15,9 +15,8 @@ export default class Group extends Model {
     };
   }
 
-  static baseUrl = '/groups';
-
-  static fetch() {
-    return this.api().get(this.baseUrl);
-  }
+  static apiConfig = {
+    ...super.apiConfig,
+    url: '/groups',
+  };
 }
