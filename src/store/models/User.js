@@ -2,6 +2,7 @@
 import { Model } from '@vuex-orm/core';
 import Role from './Role';
 import Group from './Group';
+import { Order } from '.';
 
 export default class User extends Model {
   static entity = 'users';
@@ -17,6 +18,7 @@ export default class User extends Model {
       role: this.belongsTo(Role, 'roleUuid'),
       groupUuid: this.attr(null),
       group: this.belongsTo(Group, 'roleUuid'),
+      orders: this.hasMany(Order, 'userUuid'),
       imageLink: this.attr(null),
     };
   }
