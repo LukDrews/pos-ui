@@ -17,13 +17,13 @@
                 <v-avatar size="150">
                   <v-img
                     aspect-ratio="1"
-                    v-if="item"
-                    :src="item.imageLink"
-                    :alt="item.firstName + ' ' + item.lastName"
+                    v-if="selectedUser"
+                    :src="selectedUser.imageLink ? selectedUser.imageLink : 'http://localhost:3000/static/images/default/avatar.png'"
+                    :alt="selectedUser.fullName"
                   />
                   <v-img
                     aspect-ratio="1"
-                    v-if="!item"
+                    v-if="!selectedUser"
                     src="http://localhost:3000/static/images/default/avatar.png"
                     aIlt="Upload Image"
                   />
@@ -32,7 +32,7 @@
               <v-row>
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
-                    v-model="form.firstName"
+                    v-model="user.firstName"
                     label="First name*"
                     :rules="[
                       (v) => !!v || 'First name is required',
@@ -45,7 +45,7 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
-                    v-model="form.lastName"
+                    v-model="user.lastName"
                     label="Last name*"
                     :rules="[
                       (v) => !!v || 'Last name is required',
@@ -70,7 +70,7 @@
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="form.date"
+                          v-model="user.birthDate"
                           label="Birthday date"
                           prepend-icon="mdi-calendar"
                           readonly
@@ -80,7 +80,7 @@
                         ></v-text-field>
                       </template>
                       <v-date-picker
-                        v-model="form.date"
+                        v-model="user.birthDate"
                         :active-picker.sync="datePicker.activePicker"
                         :max="
                           new Date(
@@ -99,8 +99,10 @@
               <v-row>
                 <v-col cols="12" sm="6">
                   <v-select
-                    v-model="form.group"
+                    v-model="user.groupUuid"
                     :items="options.groups"
+                    item-text="name"
+                    item-value="uuid"
                     label="Group*"
                     :rules="[(v) => !!v || 'Group is required']"
                     required
@@ -110,8 +112,10 @@
               <v-row>
                 <v-col cols="12" sm="6">
                   <v-select
-                    v-model="form.role"
+                    v-model="user.roleUuid"
                     :items="options.roles"
+                    item-text="name"
+                    item-value="uuid"
                     label="Role*"
                     :rules="[(v) => !!v || 'Role is required']"
                     required
@@ -137,6 +141,8 @@
 </template>
 
 <script>
+import { User } from '../../store/models';
+
 export default {
   name: 'AddUserForm',
   props: {
@@ -156,7 +162,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    item: {
+    selectedUser: {
       type: Object,
     },
   },
@@ -174,13 +180,7 @@ export default {
         roles: [],
       },
 
-      form: {
-        firstName: '',
-        lastName: '',
-        role: null,
-        group: null,
-        date: null,
-      },
+      user: new User(this.selectedUser),
     };
   },
   watch: {
@@ -193,37 +193,25 @@ export default {
     },
   },
   methods: {
-    loadValues() {
-      if (this.item !== null && this.item !== undefined) {
-        this.form.firstName = this.item.firstName;
-        this.form.lastName = this.item.lastName;
-        this.form.role = this.item.role.name;
-        this.form.group = this.item.group.name;
-        this.form.date = this.item.birthDate;
-      }
-    },
     save(date) {
       this.$refs.menu.save(date);
     },
     onCancel() {
       this.dialog = false;
-      this.$refs.form.reset();
       this.$emit('on-cancel');
     },
     onConfirm() {
       if (this.$refs.form.validate()) {
-        this.$emit('on-confirm', this.form, this.item);
+        this.$emit('on-confirm', this.user, this.selectedUser);
         this.dialog = false;
-        this.$refs.form.reset();
       }
     },
     openForm() {
-      this.loadValues();
       this.axios.get('groups').then((response) => {
-        this.options.groups = response.data.map((group) => group.name);
+        this.options.groups = response.data;
       });
       this.axios.get('roles').then((response) => {
-        this.options.roles = response.data.map((role) => role.name);
+        this.options.roles = response.data;
       });
     },
   },

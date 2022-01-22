@@ -17,7 +17,7 @@
       >
         <template v-slot:item.avatar="{ item }">
           <v-avatar size="36">
-            <v-img :src="item.imageLink" :alt="item.firstName" />
+            <v-img :src="item.imageLink" :alt="item.fullName" />
           </v-avatar>
         </template>
 
@@ -27,7 +27,7 @@
           <div class="d-flex justify-end">
             <UserForm
               title="Edit user"
-              :item="item"
+              :selectedUser="item"
               small
               @on-confirm="updateUser"
             >
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { User } from '../store/models';
 import UserForm from '../components/users/UserForm.vue';
 import DeleteUserDialog from '../components/users/DeleteUserDialog.vue';
 
@@ -78,59 +79,31 @@ export default {
           align: 'right',
         },
       ],
-      users: null,
     };
   },
   created() {
     this.getUsers();
   },
+  computed: {
+    users() {
+      return User.query().withAll().all();
+    },
+  },
   methods: {
     getUsers() {
       this.loadingUsers = true;
-      this.axios.get('users').then((response) => {
-        this.users = response.data.map((user) => ({
-          ...user,
-          name: `${user.firstName} ${user.lastName}`,
-        }));
+      User.fetch().then(() => {
         this.loadingUsers = false;
-        console.log(this.users);
       });
     },
-    addUser(form) {
-      const formData = new FormData();
-      formData.append('firstName', form.firstName);
-      formData.append('lastName', form.lastName);
-      formData.append('birthDate', form.date);
-      formData.append('group', form.group);
-      formData.append('role', form.role);
-
-      this.axios.post('users', formData).then(() => {
-        this.getUsers();
-        console.log('Add user: ', form);
-      });
+    addUser(user) {
+      User.add(user);
     },
-    updateUser(form, selectedItem) {
-      this.axios
-        .put(`users/${selectedItem.uuid}`, {
-          firstName: form.firstName,
-          lastName: form.lastName,
-          birthDate: form.date,
-          group: form.group,
-          role: form.role,
-        })
-        .then(() => {
-          this.getUsers();
-          console.log('Update item: ', form);
-        });
+    updateUser(user, selectedUser) {
+      User.update(selectedUser.uuid, user);
     },
-    deleteUser(item) {
-      this.loadingUsers = true;
-      this.axios.delete(`users/${item.uuid}`).then(() => {
-        this.getUsers();
-      });
-    },
-    edit(item) {
-      console.log(item);
+    deleteUser(selectedUser) {
+      User.delete(selectedUser.uuid)
     },
   },
 };
