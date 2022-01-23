@@ -10,7 +10,7 @@ import { User, Role, Group, Product, Order, OrderItem, CartItem } from './store/
 
 Vue.use(Vuex);
 
-VuexORM.use(VuexORMAxios, { axios, baseURL: 'http://localhost:3000/v1/' });
+VuexORM.use(VuexORMAxios, { axios, baseURL: `${process.env.VUE_APP_API_URL}/v1/` });
 // Create a new instance of Database.
 const database = new VuexORM.Database();
 

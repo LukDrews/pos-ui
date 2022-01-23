@@ -21,14 +21,14 @@
                     :src="
                       selectedUser.imageLink
                         ? selectedUser.imageLink
-                        : 'http://localhost:3000/static/images/default/avatar.png'
+                        : defaultImageUrl
                     "
                     :alt="selectedUser.fullName"
                   />
                   <v-img
                     aspect-ratio="1"
                     v-if="!selectedUser"
-                    src="http://localhost:3000/static/images/default/avatar.png"
+                    :src="defaultImageUrl"
                     aIlt="Upload Image"
                   />
                 </v-avatar>
@@ -178,6 +178,8 @@ export default {
         activePicker: null,
         menu: false,
       },
+
+      defaultImageUrl: `${process.env.VUE_APP_API_URL}/static/images/default/avatar.png`,
 
       user: new User(this.selectedUser),
     };
