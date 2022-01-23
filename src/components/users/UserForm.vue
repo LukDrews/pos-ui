@@ -18,7 +18,11 @@
                   <v-img
                     aspect-ratio="1"
                     v-if="selectedUser"
-                    :src="selectedUser.imageLink ? selectedUser.imageLink : 'http://localhost:3000/static/images/default/avatar.png'"
+                    :src="
+                      selectedUser.imageLink
+                        ? selectedUser.imageLink
+                        : 'http://localhost:3000/static/images/default/avatar.png'
+                    "
                     :alt="selectedUser.fullName"
                   />
                   <v-img
@@ -141,7 +145,7 @@
 </template>
 
 <script>
-import { User } from '../../store/models';
+import { Group, Role, User } from '../../store/models';
 
 export default {
   name: 'AddUserForm',
@@ -175,11 +179,6 @@ export default {
         menu: false,
       },
 
-      options: {
-        groups: [],
-        roles: [],
-      },
-
       user: new User(this.selectedUser),
     };
   },
@@ -190,6 +189,14 @@ export default {
         setTimeout(() => {
           this.activePicker = 'YEAR';
         });
+    },
+  },
+  computed: {
+    options() {
+      return {
+        groups: Group.all(),
+        roles: Role.all(),
+      };
     },
   },
   methods: {
@@ -207,12 +214,8 @@ export default {
       }
     },
     openForm() {
-      this.axios.get('groups').then((response) => {
-        this.options.groups = response.data;
-      });
-      this.axios.get('roles').then((response) => {
-        this.options.roles = response.data;
-      });
+      Group.fetch();
+      Role.fetch();
     },
   },
 };
