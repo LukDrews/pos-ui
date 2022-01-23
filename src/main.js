@@ -3,7 +3,6 @@ import Vuex from 'vuex';
 import VuexORM from '@vuex-orm/core';
 import VuexORMAxios from '@vuex-orm/plugin-axios';
 import axios from 'axios';
-import VueAxios from 'vue-axios';
 import App from './App.vue';
 import router from './router';
 import vuetify from './plugins/vuetify';
@@ -28,9 +27,6 @@ database.register(CartItem);
 const store = new Vuex.Store({
   plugins: [VuexORM.install(database)],
 });
-
-axios.defaults.baseURL = 'http://localhost:3000/v1/';
-Vue.use(VueAxios, axios);
 
 Vue.config.productionTip = false;
 
