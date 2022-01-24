@@ -33,17 +33,17 @@ export default class User extends ApiBase {
     url: '/users',
   };
 
-  static add(user) {
+  static $createRemote(user) {
     const formData = new FormData();
     Object.keys(user).forEach((key) => formData.append(key, user[key]));
 
-    return super.add(formData);
+    return super.$createRemote(formData);
   }
 
-  static update(uuid, user) {
+  static $updateRemote(uuid, user) {
     const formData = new FormData();
     Object.keys(user).forEach((key) => formData.append(key, user[key]));
 
-    return super.update(uuid, formData);
+    return super.$updateRemote(uuid, formData);
   }
 }

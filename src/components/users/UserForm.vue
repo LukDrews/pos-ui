@@ -216,8 +216,8 @@ export default {
       }
     },
     openForm() {
-      Group.fetch();
-      Role.fetch();
+      Group.api().$fetch();
+      Role.api().$fetch();
     },
   },
 };

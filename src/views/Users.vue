@@ -92,18 +92,18 @@ export default {
   methods: {
     getUsers() {
       this.loadingUsers = true;
-      User.fetch().then(() => {
+      User.api().$fetch().then(() => {
         this.loadingUsers = false;
       });
     },
     addUser(user) {
-      User.add(user);
+      User.api().$create(user);
     },
     updateUser(user, selectedUser) {
-      User.update(selectedUser.uuid, user);
+      User.api().$update(selectedUser.uuid, user);
     },
     deleteUser(selectedUser) {
-      User.delete(selectedUser.uuid)
+      User.api().$delete(selectedUser.uuid)
     },
   },
 };

@@ -2,44 +2,44 @@
 import { Model } from '@vuex-orm/core';
 
 export default class ApiBase extends Model {
-//   static apiConfig = {
-//     url: this.baseUrl, // pass url to fetch, get, create ...
-//     actions: {
-//       $fetch() {
-//         return this.get(`${this.model.apiConfig.url}`);
-//       },
-//       $get(uuid) {
-//         return this.get(`${this.model.apiConfig.url}/${uuid}`);
-//       },
-//       $create(data) {
-//         return this.post(`${this.model.apiConfig.url}`, data);
-//       },
-//       $update(uuid, data) {
-//         return this.put(`${this.model.apiConfig.url}/${uuid}`, data);
-//       },
-//       $delete(uuid) {
-//         return this.delete(`${this.model.apiConfig.url}/${uuid}`);
-//       },
-//     },
-//   };
+  static apiConfig = {
+    url: this.baseUrl, // pass url to fetch, get, create ...
+    actions: {
+      $fetch() {
+        return this.model.$fetchRemote();
+      },
+      $get(uuid) {
+        return this.model.$getRemote(uuid);
+      },
+      $create(data) {
+        return this.model.$createRemote(data);
+      },
+      $update(uuid, data) {
+        return this.model.$updateRemote(uuid, data);
+      },
+      $delete(uuid) {
+        return this.model.$deleteRemote(uuid);
+      },
+    },
+  };
 
-  static fetch() {
+  static $fetchRemote() {
     return this.api().get(`${this.apiConfig.url}`);
   }
 
-  static get(uuid) {
+  static $getRemote(uuid) {
     return this.api().get(`${this.apiConfig.url}/${uuid}`);
   }
 
-  static add(data) {
+  static $createRemote(data) {
     return this.api().post(`${this.apiConfig.url}`, data);
   }
 
-  static update(uuid, data) {
+  static $updateRemote(uuid, data) {
     return this.api().put(`${this.apiConfig.url}/${uuid}`, data);
   }
 
-  static delete(uuid) {
+  static $deleteRemote(uuid) {
     return this.api().delete(`${this.apiConfig.url}/${uuid}`);
   }
 }
