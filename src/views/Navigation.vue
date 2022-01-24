@@ -46,10 +46,11 @@ export default {
     items: [
       { title: 'Home', icon: 'mdi-home-outline', path: '/' },
       { title: 'Shop', icon: 'mdi-store-outline', path: '/shop' },
-      { title: 'Users', icon: 'mdi-account-group-outline', path: '/users' },
+      { title: 'Users', icon: 'mdi-account-outline', path: '/users' },
       { title: 'Orders', icon: 'mdi-cart-outline', path: '/orders' },
       { title: 'Statistics', icon: 'mdi-finance', path: '/statistics' },
       { title: 'Transactions', icon: 'mdi-credit-card-outline', path: '/transactions' },
+      { title: 'Roles', icon: 'mdi-account-lock-open-outline', path: '/roles' },
     ],
     mini: false,
   }),

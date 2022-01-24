@@ -40,6 +40,6 @@ export default class ApiBase extends Model {
   }
 
   static $deleteRemote(uuid) {
-    return this.api().delete(`${this.apiConfig.url}/${uuid}`);
+    return this.api().delete(`${this.apiConfig.url}/${uuid}`, { delete: uuid });
   }
 }
