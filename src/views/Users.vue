@@ -1,55 +1,57 @@
 <template>
-  <v-card>
-    <v-card-title class="d-flex justify-space-between mb-6">
-      <UserForm title="Add user" @on-confirm="addUser"> Add User </UserForm>
+  <v-container>
+    <v-card>
+      <v-card-title class="d-flex justify-space-between mb-6">
+        <UserForm title="Add user" @on-confirm="addUser"> Add User </UserForm>
 
-      <v-btn @click="getUsers()">
-        <v-icon>mdi-reload</v-icon>
-      </v-btn>
-    </v-card-title>
-    <div v-if="users !== null">
-      <v-data-table
-        class="pa-4"
-        :headers="headers"
-        :items="users"
-        :loading="loadingUsers"
-        :items-per-page="-1"
-      >
-        <template v-slot:item.avatar="{ item }">
-          <v-avatar size="36">
-            <v-img :src="item.imageLink" :alt="item.fullName" />
-          </v-avatar>
-        </template>
+        <v-btn @click="getUsers()">
+          <v-icon>mdi-reload</v-icon>
+        </v-btn>
+      </v-card-title>
+      <div v-if="users !== null">
+        <v-data-table
+          class="pa-4"
+          :headers="headers"
+          :items="users"
+          :loading="loadingUsers"
+          :items-per-page="-1"
+        >
+          <template v-slot:item.avatar="{ item }">
+            <v-avatar size="36">
+              <v-img :src="item.imageLink" :alt="item.fullName" />
+            </v-avatar>
+          </template>
 
-        <!-- Source: https://stackoverflow.com/a/59084212 -->
-        <!-- https://vuetifyjs.com/en/components/data-tables/#item -->
-        <template v-slot:item.controls="{ item }">
-          <div class="d-flex justify-end">
-            <UserForm
-              title="Edit user"
-              :selectedUser="item"
-              small
-              @on-confirm="updateUser"
-            >
-              <v-icon>mdi-square-edit-outline</v-icon>
-            </UserForm>
-            <div class="ms-2"></div>
-            <DeleteUserDialog :item="item" @delete-user="deleteUser" />
-          </div>
-        </template>
-      </v-data-table>
-    </div>
-    <div v-else>
-      <!-- https://marinaaisa.com/blog/design-and-code-skeletons-screens -->
-      <v-skeleton-loader
-        type="table-tbody, table-tfoot"
-        :types="{
-          'table-tbody': 'table-row-divider@10',
-          'table-row': 'table-cell@' + headers.length,
-        }"
-      ></v-skeleton-loader>
-    </div>
-  </v-card>
+          <!-- Source: https://stackoverflow.com/a/59084212 -->
+          <!-- https://vuetifyjs.com/en/components/data-tables/#item -->
+          <template v-slot:item.controls="{ item }">
+            <div class="d-flex justify-end">
+              <UserForm
+                title="Edit user"
+                :selectedUser="item"
+                small
+                @on-confirm="updateUser"
+              >
+                <v-icon>mdi-square-edit-outline</v-icon>
+              </UserForm>
+              <div class="ms-2"></div>
+              <DeleteUserDialog :item="item" @delete-user="deleteUser" />
+            </div>
+          </template>
+        </v-data-table>
+      </div>
+      <div v-else>
+        <!-- https://marinaaisa.com/blog/design-and-code-skeletons-screens -->
+        <v-skeleton-loader
+          type="table-tbody, table-tfoot"
+          :types="{
+            'table-tbody': 'table-row-divider@10',
+            'table-row': 'table-cell@' + headers.length,
+          }"
+        ></v-skeleton-loader>
+      </div>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -92,9 +94,11 @@ export default {
   methods: {
     getUsers() {
       this.loadingUsers = true;
-      User.api().$fetch().then(() => {
-        this.loadingUsers = false;
-      });
+      User.api()
+        .$fetch()
+        .then(() => {
+          this.loadingUsers = false;
+        });
     },
     addUser(user) {
       User.api().$create(user);
@@ -103,7 +107,7 @@ export default {
       User.api().$update(selectedUser.uuid, user);
     },
     deleteUser(selectedUser) {
-      User.api().$delete(selectedUser.uuid)
+      User.api().$delete(selectedUser.uuid);
     },
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container>
     <v-snackbar color="red" v-model="snackbar" :timeout="timeout">
       {{ snackbarText }}
       <template v-slot:action="{ attrs }">
@@ -8,7 +8,14 @@
     </v-snackbar>
     <v-card>
       <v-card-title class="d-flex justify-space-between mb-6">
-        <v-btn @click="roleForm = true; selectedRole = null"> Add Role </v-btn>
+        <v-btn
+          @click="
+            roleForm = true;
+            selectedRole = null;
+          "
+        >
+          Add Role
+        </v-btn>
         <RoleForm
           title="Add role"
           :selectedRole="selectedRole"
@@ -30,7 +37,13 @@
         <!-- https://vuetifyjs.com/en/components/data-tables/#item -->
         <template v-slot:item.controls="{ item }">
           <div class="d-flex justify-end">
-            <v-btn small @click.stop="roleForm = true; selectedRole = item">
+            <v-btn
+              small
+              @click.stop="
+                roleForm = true;
+                selectedRole = item;
+              "
+            >
               <v-icon>mdi-square-edit-outline</v-icon>
             </v-btn>
             <div class="ms-2"></div>
@@ -39,7 +52,7 @@
         </template>
       </v-data-table>
     </v-card>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -84,8 +97,8 @@ export default {
     getRoles() {
       Role.api().$fetch();
     },
-    addUpdateRole(role, selectedRole){
-      if (selectedRole){
+    addUpdateRole(role, selectedRole) {
+      if (selectedRole) {
         this.updateRole(role, selectedRole);
       } else {
         this.addRole(role);
