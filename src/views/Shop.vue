@@ -1,56 +1,75 @@
 <template>
-  <v-card>
-    <v-card-title class="d-flex justify-space-between mb-6">
-      <h3>Cart</h3>
-    </v-card-title>
-    <v-data-table
-      class="pa-4"
-      :headers="headers"
-      :items="cartItems"
-      :items-per-page="-1"
-      hide-default-footer
-    >
-      <template v-slot:item.count="{ item }">
-        <v-text-field
-          class="shrink"
-          reverse
-          v-model="item.count"
-          single-line
-          solo-inverted
-          dense
-          hide-details
-          prepend-icon="mdi-minus"
-          append-outer-icon="mdi-plus"
-          @click:prepend="decrementCount(item)"
-          @click:append-outer="incrementCount(item)"
-        >
-        </v-text-field>
-      </template>
+  <v-container class="grow d-flex flex-column" fill-height>
+    <v-row class="flex-grow-1">
+      <v-col cols="8" class="pr-0">
+        <v-card height="100%">
+          <v-card-title>
+            <h3>Cart</h3>
+          </v-card-title>
+          <v-data-table
+            class="pa-4"
+            :headers="headers"
+            :items="cartItems"
+            :items-per-page="-1"
+            hide-default-footer
+          >
+            <template v-slot:item.count="{ item }">
+              <v-text-field
+                class="shrink"
+                reverse
+                v-model="item.count"
+                single-line
+                solo-inverted
+                dense
+                hide-details
+                prepend-icon="mdi-minus"
+                append-outer-icon="mdi-plus"
+                @click:prepend="decrementCount(item)"
+                @click:append-outer="incrementCount(item)"
+              >
+              </v-text-field>
+            </template>
+            <template v-slot:item.controls="{ item }">
+              <ConfirmDialog
+                title="Delete item"
+                @on-confirm="deleteCartItem(item)"
+              />
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-col>
+      <v-col cols="4">
+        <v-card height="100%">
+          <v-card-title>Account Details</v-card-title>
+          <v-card-title class="mt-8">
+            <v-avatar size="150">
+              <v-img aspect-ratio="1" :src="imageLink" :alt="user.fullName" />
+            </v-avatar>
+            <div class="ml-3">John Doe</div>
+          </v-card-title>
+          <v-card-text>
+            <!-- <p class="text-subtitle-1">Username:</p> -->
+            <div class="my-4 text-subtitle-1">Balance:</div>
 
-      <!-- <template v-slot:item.controls="{ item }">
-          <div class="d-flex justify-end">
-            <UserForm
-              title="Edit user"
-              :selectedUser="item"
-              small
-              @on-confirm="updateUser"
-            >
-              <v-icon>mdi-square-edit-outline</v-icon>
-            </UserForm>
-            <div class="ms-2"></div>
-            <DeleteUserDialog :item="item" @delete-user="deleteUser" />
-          </div>
-        </template> -->
-    </v-data-table>
-  </v-card>
+            <div class="text-subtitle-1"></div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import { barcode as validator } from '../validators';
-import { CartItem } from '../store/models';
+import { CartItem, User } from '../store/models';
+import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue';
 
 export default {
   name: 'Shop',
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    ConfirmDialog,
+  },
   data() {
     return {
       barcode: '',
@@ -65,6 +84,8 @@ export default {
           align: 'right',
         },
       ],
+      user: new User(),
+      defaultImageUrl: `${process.env.VUE_APP_API_URL}/static/images/default/avatar.png`,
     };
   },
   created() {
@@ -77,6 +98,9 @@ export default {
   computed: {
     cartItems() {
       return CartItem.query().withAll().all();
+    },
+    imageLink() {
+      return this.user?.imageLink ? this.user.imageLink : this.defaultImageUrl;
     },
   },
   methods: {
