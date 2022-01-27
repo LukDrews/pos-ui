@@ -11,7 +11,7 @@ export default class CartItem extends ApiBase {
     return {
       uuid: this.string(null),
       productUuid: this.string(null),
-      product: this.belongsTo(Product),
+      product: this.belongsTo(Product, 'productUuid'),
       count: this.number(null),
     };
   }
