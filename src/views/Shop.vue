@@ -10,15 +10,22 @@
       :items-per-page="-1"
       hide-default-footer
     >
-      <!-- <template v-slot:item.count="{ item }">
-          <v-icon small class="mr-2" @click="incrementCount(item)">
-            mdi-plus
-          </v-icon>
-          {{ item.count }}
-          <v-icon small class="mr-2" @click="decrementCount(item)">
-            mdi-minus
-          </v-icon>
-        </template> -->
+      <template v-slot:item.count="{ item }">
+        <v-text-field
+          class="shrink"
+          reverse
+          v-model="item.count"
+          single-line
+          solo-inverted
+          dense
+          hide-details
+          prepend-icon="mdi-minus"
+          append-outer-icon="mdi-plus"
+          @click:prepend="decrementCount(item)"
+          @click:append-outer="incrementCount(item)"
+        >
+        </v-text-field>
+      </template>
 
       <!-- <template v-slot:item.controls="{ item }">
           <div class="d-flex justify-end">
@@ -50,7 +57,7 @@ export default {
       headers: [
         { text: 'Product name', value: 'product.name' },
         { text: 'Price', value: 'product.price' },
-        { text: 'Count', value: 'count' },
+        { text: 'Count', value: 'count', width: '153px' },
         {
           text: '',
           value: 'controls',
@@ -97,6 +104,16 @@ export default {
     },
     deleteCartItem(selectedCartItem) {
       CartItem.api().$delete(selectedCartItem.uuid);
+    },
+    decrementCount(cartItem) {
+      const newItem = new CartItem(cartItem);
+      newItem.count -= 1;
+      CartItem.api().$update(cartItem.uuid, newItem);
+    },
+    incrementCount(cartItem) {
+      const newItem = new CartItem(cartItem);
+      newItem.count += 1;
+      CartItem.api().$update(cartItem.uuid, newItem);
     },
   },
 };
