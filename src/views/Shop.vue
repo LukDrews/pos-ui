@@ -43,7 +43,7 @@
           <v-card-title>Account Details</v-card-title>
           <v-card-title class="mt-8">
             <v-avatar size="150">
-              <v-img aspect-ratio="1" :src="imageLink" :alt="user.fullName" />
+              <v-img aspect-ratio="1" :src="imageUrl" :alt="user.fullName" />
             </v-avatar>
             <div class="ml-3">John Doe</div>
           </v-card-title>
@@ -99,8 +99,8 @@ export default {
     cartItems() {
       return CartItem.query().withAll().all();
     },
-    imageLink() {
-      return this.user?.imageLink ? this.user.imageLink : this.defaultImageUrl;
+    imageUrl() {
+      return this.user?.imageUrl ? this.user.imageUrl : this.defaultImageUrl;
     },
   },
   methods: {

@@ -18,7 +18,7 @@
         >
           <template v-slot:item.avatar="{ item }">
             <v-avatar size="36">
-              <v-img :src="item.imageLink" :alt="item.fullName" />
+              <v-img :src="item.imageUrl" :alt="item.fullName" />
             </v-avatar>
           </template>
 

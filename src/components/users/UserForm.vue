@@ -19,8 +19,8 @@
                     aspect-ratio="1"
                     v-if="selectedUser"
                     :src="
-                      selectedUser.imageLink
-                        ? selectedUser.imageLink
+                      selectedUser.imageUrl
+                        ? selectedUser.imageUrl
                         : defaultImageUrl
                     "
                     :alt="selectedUser.fullName"

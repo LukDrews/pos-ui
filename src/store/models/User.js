@@ -20,7 +20,7 @@ export default class User extends ApiBase {
       groupUuid: this.attr(null),
       group: this.belongsTo(Group, 'groupUuid'),
       orders: this.hasMany(Order, 'userUuid'),
-      imageLink: this.attr(null),
+      imageUrl: this.attr(null),
     };
   }
 
