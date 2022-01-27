@@ -100,7 +100,6 @@ export default {
     deleteRole(selectedRole) {
       Role.api()
         .$delete(selectedRole.uuid)
-        .then((res) => console.log('remove role:', res))
         .catch((err) => {
           if (err.response.status === 409) {
             this.snackbar = true;
