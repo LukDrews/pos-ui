@@ -53,7 +53,7 @@
 import apiClientMixin from '../mixins/apiClientMixin';
 
 import { User } from '../store/models';
-import UserForm from '../components/users/UserForm.vue';
+import UserForm from '../components/forms/UserForm.vue';
 import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue';
 
 export default {

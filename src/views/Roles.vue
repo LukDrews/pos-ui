@@ -54,7 +54,7 @@
 import apiClientMixin from '../mixins/apiClientMixin';
 
 import { Role } from '../store/models';
-import RoleForm from '../components/roles/RoleForm.vue';
+import RoleForm from '../components/forms/RoleForm.vue';
 import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue';
 
 export default {

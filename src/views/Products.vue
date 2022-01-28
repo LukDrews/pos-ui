@@ -40,7 +40,7 @@
 <script>
 import apiClientMixin from '../mixins/apiClientMixin';
 import { Product } from '../store/models';
-import ProductForm from '../components/products/ProductForm.vue';
+import ProductForm from '../components/forms/ProductForm.vue';
 import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue';
 
 export default {
