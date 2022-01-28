@@ -45,9 +45,9 @@
             <v-avatar size="150">
               <v-img aspect-ratio="1" :src="imageUrl" :alt="user.fullName" />
             </v-avatar>
-            <div class="ml-3">John Doe</div>
           </v-card-title>
           <v-card-text>
+            <div class="my-4 text-subtitle-1">{{ user.fullName }}</div>
             <!-- <p class="text-subtitle-1">Username:</p> -->
             <div class="my-4 text-subtitle-1">Balance:</div>
 
@@ -112,6 +112,16 @@ export default {
         // call Api
         this.addCartItem(this.barcode);
         // reset barcode
+        this.barcode = '';
+      } else if (
+        e.key === 'Enter' &&
+        validator.isValidFormat(this.barcode, validator.formats.ean8)
+      ) {
+        User.api()
+          .$getByBarcode(this.barcode)
+          .then((res) => {
+            this.user = User.find(res.response.data.uuid);
+          });
         this.barcode = '';
       } else if (e.key >= '0' && e.key <= '9') {
         this.barcode += e.key;

@@ -11,6 +11,9 @@ export default class ApiBase extends Model {
       $get(uuid) {
         return this.model.$getRemote(uuid);
       },
+      $getByBarcode(barcode) {
+        return this.model.$getRemoteByBarcode(barcode);
+      },
       $create(data) {
         return this.model.$createRemote(data);
       },
@@ -29,6 +32,10 @@ export default class ApiBase extends Model {
 
   static $getRemote(uuid) {
     return this.api().get(`${this.apiConfig.url}/${uuid}`);
+  }
+
+  static $getRemoteByBarcode(barcode) {
+    return this.api().get(`${this.apiConfig.url}/barcode/${barcode}`);
   }
 
   static $createRemote(data) {
