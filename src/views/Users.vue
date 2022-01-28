@@ -1,19 +1,28 @@
 <template>
   <v-container>
-    <v-card>
-      <v-card-title class="d-flex justify-space-between mb-6">
-        <UserForm title="Add user" @on-confirm="addUser"> Add User </UserForm>
+    <UserForm
+      title="Add user"
+      :selected="selected"
+      v-model="inputForm"
+      @on-confirm="addOrUpdateItem"
+    />
+    <ConfirmDialog v-model="confirmDialog" @on-confirm="deleteItem(selected)" />
 
-        <v-btn @click="getUsers()">
+    <v-card>
+      <v-card-title class="d-flex justify-space-between">
+        Users
+        <v-btn small @click="getItems()">
           <v-icon>mdi-reload</v-icon>
         </v-btn>
       </v-card-title>
-      <div v-if="users !== null">
+      <v-card-actions class="ps-4">
+        <v-btn class="primary" @click.stop="showForm(null)">Add user</v-btn>
+      </v-card-actions>
+      <v-card-text>
         <v-data-table
           class="pa-4"
           :headers="headers"
           :items="users"
-          :loading="loadingUsers"
           :items-per-page="-1"
         >
           <template v-slot:item.avatar="{ item }">
@@ -26,48 +35,38 @@
           <!-- https://vuetifyjs.com/en/components/data-tables/#item -->
           <template v-slot:item.controls="{ item }">
             <div class="d-flex justify-end">
-              <UserForm
-                title="Edit user"
-                :selectedUser="item"
-                small
-                @on-confirm="updateUser"
-              >
+              <v-btn small class="mr-2" @click.stop="showForm(item)">
                 <v-icon>mdi-square-edit-outline</v-icon>
-              </UserForm>
-              <div class="ms-2"></div>
-              <DeleteUserDialog :item="item" @delete-user="deleteUser" />
+              </v-btn>
+              <v-btn small class="mr-2" @click.stop="showConfirmDialog(item)">
+                <v-icon>mdi-delete-outline</v-icon>
+              </v-btn>
             </div>
           </template>
         </v-data-table>
-      </div>
-      <div v-else>
-        <!-- https://marinaaisa.com/blog/design-and-code-skeletons-screens -->
-        <v-skeleton-loader
-          type="table-tbody, table-tfoot"
-          :types="{
-            'table-tbody': 'table-row-divider@10',
-            'table-row': 'table-cell@' + headers.length,
-          }"
-        ></v-skeleton-loader>
-      </div>
+      </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script>
+import apiClientMixin from '../mixins/apiClientMixin';
+
 import { User } from '../store/models';
 import UserForm from '../components/users/UserForm.vue';
-import DeleteUserDialog from '../components/users/DeleteUserDialog.vue';
+import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue';
 
 export default {
   name: 'Users',
+  mixins: [apiClientMixin],
   components: {
     UserForm,
-    DeleteUserDialog,
+    ConfirmDialog,
   },
   data() {
     return {
-      loadingUsers: true,
+      apiClient: User,
+
       headers: [
         { text: '', value: 'avatar', sortable: false },
         { text: 'First name', value: 'firstName' },
@@ -81,10 +80,14 @@ export default {
           align: 'right',
         },
       ],
+
+      selected: null,
+      inputForm: false,
+      confirmDialog: false,
     };
   },
   created() {
-    this.getUsers();
+    this.getItems();
   },
   computed: {
     users() {
@@ -92,22 +95,13 @@ export default {
     },
   },
   methods: {
-    getUsers() {
-      this.loadingUsers = true;
-      User.api()
-        .$fetch()
-        .then(() => {
-          this.loadingUsers = false;
-        });
+    showForm(selected) {
+      this.inputForm = true;
+      this.selected = selected;
     },
-    addUser(user) {
-      User.api().$create(user);
-    },
-    updateUser(user, selectedUser) {
-      User.api().$update(selectedUser.uuid, user);
-    },
-    deleteUser(selectedUser) {
-      User.api().$delete(selectedUser.uuid);
+    showConfirmDialog(selected) {
+      this.confirmDialog = true;
+      this.selected = selected;
     },
   },
 };

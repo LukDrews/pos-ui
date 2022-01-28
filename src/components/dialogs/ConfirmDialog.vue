@@ -1,12 +1,12 @@
 <template>
-  <v-dialog v-model="dialog" width="500">
-    <template v-slot:activator="{ on, attrs }">
+  <v-dialog v-model="value" width="500">
+    <!-- <template v-slot:activator="{ on, attrs }">
       <v-btn small color="red" dark v-bind="attrs" v-on="on">
         <slot>
           <v-icon>mdi-delete-outline</v-icon>
         </slot>
       </v-btn>
-    </template>
+    </template> -->
 
     <v-card>
       <v-card-title class="text-h5"> {{ title }} </v-card-title>
@@ -17,7 +17,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="dialog = false">
+        <v-btn color="blue darken-1" text @click="onCancel()">
           {{ buttons[0] }}
         </v-btn>
         <v-btn color="red lighten-2" text @click="onConfirm()">
@@ -41,17 +41,20 @@ export default {
       type: Array,
       default: () => ['Cancel', 'Confirm'],
     },
-  },
-  data() {
-    return {
-      dialog: false,
-    };
+    value: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     onConfirm() {
-      this.dialog = false;
+      this.$emit('input', false);
       this.$emit('on-confirm');
     },
+    onCancel() {
+      this.$emit('input', false);
+      this.$emit('on-cancel');
+    }
   },
 };
 </script>

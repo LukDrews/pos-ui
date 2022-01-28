@@ -1,11 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" persistent max-width="600px">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" :small="small" v-on="on" @click="openForm()">
-          <slot />
-        </v-btn>
-      </template>
+    <v-dialog v-model="value" persistent max-width="600px">
       <v-card>
         <v-card-title>
           <span class="text-h5">{{ title }}</span>
@@ -17,17 +12,15 @@
                 <v-avatar size="150">
                   <v-img
                     aspect-ratio="1"
-                    v-if="selectedUser"
+                    v-if="selected"
                     :src="
-                      selectedUser.imageUrl
-                        ? selectedUser.imageUrl
-                        : defaultImageUrl
+                      selected.imageUrl ? selected.imageUrl : defaultImageUrl
                     "
-                    :alt="selectedUser.fullName"
+                    :alt="selected.fullName"
                   />
                   <v-img
                     aspect-ratio="1"
-                    v-if="!selectedUser"
+                    v-if="!selected"
                     :src="defaultImageUrl"
                     aIlt="Upload Image"
                   />
@@ -146,6 +139,7 @@
 
 <script>
 import { Group, Role, User } from '../../store/models';
+// import { barcode as validator } from '../../validators';
 
 export default {
   name: 'AddUserForm',
@@ -162,17 +156,17 @@ export default {
       type: String,
       default: 'Cancel',
     },
-    small: {
+    selected: {
+      type: Object,
+    },
+    value: {
       type: Boolean,
       default: false,
-    },
-    selectedUser: {
-      type: Object,
     },
   },
   data() {
     return {
-      dialog: false,
+      user: new User(),
 
       datePicker: {
         activePicker: null,
@@ -180,11 +174,21 @@ export default {
       },
 
       defaultImageUrl: `${process.env.VUE_APP_API_URL}/static/images/default/avatar.png`,
-
-      user: new User(this.selectedUser),
     };
   },
   watch: {
+    value(val) {
+      if (val) {
+        this.user = this.selected ? new User(this.selected) : new User();
+        Group.api().$fetch();
+        Role.api().$fetch();
+        try {
+          this.$refs.form.resetValidation();
+        } catch (e) {
+          // ignore error
+        }
+      }
+    },
     menu(val) {
       // eslint-disable-next-line no-unused-expressions
       val &&
@@ -206,18 +210,17 @@ export default {
       this.$refs.menu.save(date);
     },
     onCancel() {
-      this.dialog = false;
+      this.$emit('input', false);
       this.$emit('on-cancel');
+      this.$refs.form.resetValidation();
     },
     onConfirm() {
       if (this.$refs.form.validate()) {
-        this.$emit('on-confirm', this.user, this.selectedUser);
-        this.dialog = false;
+        this.user.uuid = this.selected?.uuid;
+        this.$emit('input', false);
+        this.$emit('on-confirm', this.user);
+        this.$refs.form.resetValidation();
       }
-    },
-    openForm() {
-      Group.api().$fetch();
-      Role.api().$fetch();
     },
   },
 };

@@ -3,9 +3,11 @@
     <ProductForm
       title="Add product"
       :selected="selected"
-      v-model="productForm"
+      v-model="inputForm"
       @on-confirm="addUpdateProduct"
     />
+    <ConfirmDialog v-model="confirmDialog" @on-confirm="deleteItem(selected)" />
+
     <v-card>
       <v-card-title> Products </v-card-title>
       <v-card-actions class="ps-4">
@@ -24,7 +26,9 @@
               <v-btn small class="mr-2" @click.stop="showForm(item)">
                 <v-icon>mdi-square-edit-outline</v-icon>
               </v-btn>
-              <ConfirmDialog @on-confirm="deleteItem(item)" />
+              <v-btn small class="mr-2" @click.stop="showConfirmDialog(item)">
+                <v-icon>mdi-delete-outline</v-icon>
+              </v-btn>
             </div>
           </template>
         </v-data-table>
@@ -60,7 +64,8 @@ export default {
           align: 'right',
         },
       ],
-      productForm: false,
+      confirmDialog: false,
+      inputForm: false,
       selected: null,
     };
   },
@@ -81,7 +86,11 @@ export default {
       }
     },
     showForm(product) {
-      this.productForm = true;
+      this.inputForm = true;
+      this.selected = product;
+    },
+    showConfirmDialog(product) {
+      this.confirmDialog = true;
       this.selected = product;
     },
   },

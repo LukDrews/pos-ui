@@ -14,6 +14,13 @@ export default {
     updateItem(item) {
       this.apiClient.api().$update(item.uuid, item);
     },
+    addOrUpdateItem(item) {
+      if (item.uuid) {
+        this.updateItem(item);
+      } else {
+        this.addItem(item);
+      }
+    },
     deleteItem(item) {
       this.apiClient.api().$delete(item.uuid);
     },

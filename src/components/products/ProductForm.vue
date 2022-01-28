@@ -87,7 +87,7 @@ export default {
   },
   data() {
     return {
-      product: {},
+      product: new Product(),
       productNameRules: [
         (v) => !!v || 'Name is required',
         (v) =>

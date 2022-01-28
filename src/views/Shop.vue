@@ -1,11 +1,10 @@
 <template>
-  <v-container class="grow d-flex flex-column" fill-height>
+  <v-container class="grow d-flex flex-column" style="height: 100%">
+    <ConfirmDialog v-model="confirmDialog" @on-confirm="deleteItem(selected)" />
     <v-row class="flex-grow-1">
       <v-col cols="8" class="pr-0">
         <v-card height="100%">
-          <v-card-title>
-            <h3>Cart</h3>
-          </v-card-title>
+          <v-card-title> Cart </v-card-title>
           <v-data-table
             class="pa-4"
             :headers="headers"
@@ -24,16 +23,16 @@
                 hide-details
                 prepend-icon="mdi-minus"
                 append-outer-icon="mdi-plus"
+                @blur="updateItem(item)"
                 @click:prepend="decrementCount(item)"
                 @click:append-outer="incrementCount(item)"
               >
               </v-text-field>
             </template>
             <template v-slot:item.controls="{ item }">
-              <ConfirmDialog
-                title="Delete item"
-                @on-confirm="deleteCartItem(item)"
-              />
+              <v-btn small class="mr-2" @click.stop="showConfirmDialog(item)">
+                <v-icon>mdi-delete-outline</v-icon>
+              </v-btn>
             </template>
           </v-data-table>
         </v-card>
@@ -60,18 +59,22 @@
 </template>
 
 <script>
+import apiClientMixin from '../mixins/apiClientMixin';
+
 import { barcode as validator } from '../validators';
 import { CartItem, User } from '../store/models';
 import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue';
 
 export default {
   name: 'Shop',
+  mixins: [apiClientMixin],
   components: {
-    // eslint-disable-next-line vue/no-unused-components
     ConfirmDialog,
   },
   data() {
     return {
+      apiClient: CartItem,
+
       barcode: '',
       headers: [
         { text: 'Product name', value: 'product.name' },
@@ -86,11 +89,14 @@ export default {
       ],
       user: new User(),
       defaultImageUrl: `${process.env.VUE_APP_API_URL}/static/images/default/avatar.png`,
+
+      selected: null,
+      confirmDialog: false,
     };
   },
   created() {
     window.addEventListener('keypress', this.processKey);
-    this.getCartItems();
+    this.getItems();
   },
   destroyed() {
     window.removeEventListener('keypress', this.processKey);
@@ -109,9 +115,7 @@ export default {
         e.key === 'Enter' &&
         validator.isValidFormat(this.barcode, validator.formats.ean13)
       ) {
-        // call Api
         this.addCartItem(this.barcode);
-        // reset barcode
         this.barcode = '';
       } else if (
         e.key === 'Enter' &&
@@ -125,29 +129,26 @@ export default {
         this.barcode = '';
       } else if (e.key >= '0' && e.key <= '9') {
         this.barcode += e.key;
+      } else if (e.key === 'Enter') {
+        this.barcode = '';
       }
     },
-    getCartItems() {
-      CartItem.api().$fetch();
-    },
     addCartItem(barcode) {
-      CartItem.api().$create({ barcode });
-    },
-    updateCartItem(cartItem, selectedCartItem) {
-      CartItem.api().$update(selectedCartItem.uuid, cartItem);
-    },
-    deleteCartItem(selectedCartItem) {
-      CartItem.api().$delete(selectedCartItem.uuid);
+      this.addItem({ barcode });
     },
     decrementCount(cartItem) {
       const newItem = new CartItem(cartItem);
       newItem.count -= 1;
-      CartItem.api().$update(cartItem.uuid, newItem);
+      this.updateItem(newItem);
     },
     incrementCount(cartItem) {
       const newItem = new CartItem(cartItem);
       newItem.count += 1;
-      CartItem.api().$update(cartItem.uuid, newItem);
+      this.updateItem(newItem);
+    },
+    showConfirmDialog(item) {
+      this.confirmDialog = true;
+      this.selected = item;
     },
   },
 };

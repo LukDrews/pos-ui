@@ -54,7 +54,7 @@ export default {
       type: String,
       default: 'Cancel',
     },
-    selectedRole: {
+    selected: {
       type: Object,
     },
     value: {
@@ -70,7 +70,7 @@ export default {
         (v) =>
           !this.roles
             .map((r) => r.name)
-            .filter((name) => name !== this.selectedRole?.name)
+            .filter((name) => name !== this.selected?.name)
             .includes(v) || 'Name already used',
       ],
     };
@@ -78,10 +78,13 @@ export default {
   watch: {
     value(val) {
       if (val) {
-        this.role = this.selectedRole
-          ? new Role(this.selectedRole)
-          : new Role();
+        this.role = this.selected ? new Role(this.selected) : new Role();
         Role.api().$fetch();
+        try {
+          this.$refs.form.resetValidation();
+        } catch (e) {
+          // ignore error
+        }
       }
     },
   },
@@ -98,8 +101,9 @@ export default {
     },
     onConfirm() {
       if (this.$refs.form.validate()) {
+        this.role.uuid = this.selected?.uuid;
         this.$emit('input', false);
-        this.$emit('on-confirm', this.role, this.selectedRole);
+        this.$emit('on-confirm', this.role);
         this.$refs.form.resetValidation();
       }
     },
