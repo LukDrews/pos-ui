@@ -46,6 +46,7 @@ export default {
     items: [
       { title: 'Home', icon: 'mdi-home-outline', path: '/' },
       { title: 'Shop', icon: 'mdi-store-outline', path: '/shop' },
+      { title: 'Products', icon: 'mdi-tag-outline', path: '/products'},
       { title: 'Users', icon: 'mdi-account-outline', path: '/users' },
       { title: 'Orders', icon: 'mdi-cart-outline', path: '/orders' },
       { title: 'Statistics', icon: 'mdi-finance', path: '/statistics' },

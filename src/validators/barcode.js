@@ -26,6 +26,9 @@ function calculateChecksum(barcode) {
 }
 
 function validateFormat(barcode, format) {
+  if (!barcode) {
+    return false;
+  }
   return barcode.length === format.validLength && format.validChars.test(barcode);
 }
 

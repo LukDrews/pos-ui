@@ -40,7 +40,7 @@
 import { Role } from '../../store/models';
 
 export default {
-  name: 'AddUserForm',
+  name: 'AddRoleForm',
   props: {
     title: {
       type: String,
