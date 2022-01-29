@@ -30,9 +30,9 @@
               </v-text-field>
             </template>
             <template v-slot:item.controls="{ item }">
-              <v-btn small class="mr-2" @click.stop="showConfirmDialog(item)">
-                <v-icon>mdi-delete-outline</v-icon>
-              </v-btn>
+              <v-icon @click.stop="showConfirmDialog(item)">
+                mdi-delete-outline
+              </v-icon>
             </template>
           </v-data-table>
         </v-card>

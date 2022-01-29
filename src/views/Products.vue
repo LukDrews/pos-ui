@@ -22,14 +22,12 @@
           hide-default-footer
         >
           <template v-slot:item.controls="{ item }">
-            <div class="d-flex justify-end">
-              <v-btn small class="mr-2" @click.stop="showForm(item)">
-                <v-icon>mdi-square-edit-outline</v-icon>
-              </v-btn>
-              <v-btn small class="mr-2" @click.stop="showConfirmDialog(item)">
-                <v-icon>mdi-delete-outline</v-icon>
-              </v-btn>
-            </div>
+            <v-icon class="mr-2" @click.stop="showForm(item)">
+              mdi-square-edit-outline
+            </v-icon>
+            <v-icon @click.stop="showConfirmDialog(item)">
+              mdi-delete-outline
+            </v-icon>
           </template>
         </v-data-table>
       </v-card-text>
