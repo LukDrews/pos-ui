@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-// import router from "./router";
+import router from "./router";
 
 // Oruga Framework + TailwindCSS
 import Oruga from "@oruga-ui/oruga-next";
@@ -25,8 +25,7 @@ import {
 
 VuexORM.use(VuexORMAxios, {
   axios,
-  //   baseURL: `${process.env.VUE_APP_API_URL}/v1/`,
-  baseURL: `http://localhost:3000/v1/`,
+  baseURL: `${import.meta.env.VITE_API_URL}/v1/`,
 });
 // Create a new instance of Database.
 const database = new VuexORM.Database();
@@ -46,7 +45,7 @@ const store = new Vuex.createStore({
 });
 
 const app = createApp(App);
-
+app.use(router);
 app.use(Oruga, {
   button: {
     roundedClass: "btn-rounded",
