@@ -173,7 +173,7 @@ export default {
         menu: false,
       },
 
-      defaultImageUrl: `${process.env.VUE_APP_API_URL}/static/images/default/avatar.png`,
+      defaultImageUrl: `${import.meta.env.VITE_API_URL}/static/images/default/avatar.png`,
     };
   },
   watch: {

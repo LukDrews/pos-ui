@@ -88,7 +88,7 @@ export default {
         },
       ],
       user: new User(),
-      defaultImageUrl: `${process.env.VUE_APP_API_URL}/static/images/default/avatar.png`,
+      defaultImageUrl: `${import.meta.env.VITE_API_URL}/static/images/default/avatar.png`,
 
       selected: null,
       confirmDialog: false,
