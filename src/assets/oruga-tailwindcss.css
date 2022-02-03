@@ -15,3 +15,8 @@
 .btn-disabled {
   @apply opacity-50 cursor-not-allowed;
 }
+
+/* Sidebar */
+.sidebar-content {
+  @apply text-gray-400 bg-gray-900
+}

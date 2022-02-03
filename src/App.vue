@@ -1,11 +1,11 @@
 <template>
-  <HelloWorld msg="Hello Vue 3 + Vite" />
-  <!-- <Navigation /> -->
-  <div class="bg-red-500">Color from tailwindcss</div>
+  <Navigation />
+  <div id="content">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script setup>
-import HelloWorld from "./components/HelloWorld.vue";
 import Navigation from "./views/Navigation.vue";
 import { User } from "./store/models";
 
@@ -13,7 +13,7 @@ User.api().$fetch();
 </script>
 
 <style>
-#app {
+#content {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
