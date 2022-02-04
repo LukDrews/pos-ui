@@ -1,7 +1,7 @@
 <template>
   <div
-    class="h-screen float-left"
-    :class="[reduce ? 'o-side__content--mini' : 'o-side__content']"
+    class="h-screen float-left sidebar-content"
+    :class="[reduce ? 'sidebar-reduce' : '']"
   >
     <o-sidebar fullheight :reduce="reduce" open>
       <div>
@@ -21,9 +21,11 @@
             />
           </svg>
         </router-link>
+        <!-- <div class="flex flex-col items-center mt-3 border-t border-gray-700"></div> -->
+        <!-- <div class="flex flex-col items-center w-full mt-3 border-t border-gray-700"></div> -->
         <div
-          class="flex flex-col border-t border-gray-700"
-          :class="{ 'items-center': reduce }"
+          class="flex flex-col items-center border-t border-gray-700"
+          :class="{ 'w-full': !reduce }"
         >
           <ul>
             <NavigationItem

@@ -17,6 +17,13 @@
 }
 
 /* Sidebar */
-.sidebar-content {
+.sidebar-colors {
   @apply text-gray-400 bg-gray-900
+}
+.sidebar-content {
+  @apply sidebar-colors w-40
+}
+
+.sidebar-reduce {
+  @apply sidebar-colors w-16
 }
