@@ -1,15 +1,9 @@
 <template>
-  <hello-world />
+  <h1>Home</h1>
 </template>
 
 <script>
-import HelloWorld from '../components/HelloWorld.vue';
-
 export default {
-  name: 'Home',
-
-  components: {
-    HelloWorld,
-  },
+  name: "Home",
 };
 </script>
