@@ -27,3 +27,8 @@
 .sidebar-reduce {
   @apply sidebar-colors w-16
 }
+
+/* Modal */
+.modal-content {
+  @apply overflow-visible
+}

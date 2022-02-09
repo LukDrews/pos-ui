@@ -63,5 +63,8 @@ app.use(Oruga, {
     contentClass: "sidebar-content",
     reduceClass: "sidebar-reduce",
   },
+  modal: {
+    contentClass: "modal-content",
+  },
 });
 app.mount("#app");

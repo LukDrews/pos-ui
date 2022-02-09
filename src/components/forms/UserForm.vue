@@ -1,5 +1,60 @@
 <template>
-  <div>
+  <o-modal v-model:active="isActive" scroll="clip" :can-cancel="false">
+    <div class="p-4 overflow-visible">
+      <div class="pb-4">
+        <h5>{{ title }}</h5>
+      </div>
+      <div>
+        <o-field grouped label="Name">
+          <o-input
+            v-model="user.firstName"
+            placeholder="First Name"
+            expanded
+          ></o-input>
+
+          <o-input
+            v-model="user.lastName"
+            placeholder="Last Name"
+            expanded
+          ></o-input>
+        </o-field>
+
+        <o-field grouped label="Select a date">
+          <o-datepicker
+            v-model="user.birthDate"
+            :locale="locale"
+            placeholder="Click to select..."
+            icon="calendar"
+            trap-focus
+          >
+          </o-datepicker>
+        </o-field>
+
+        <o-field label="Group">
+          <o-select placeholder="Select a group">
+            <option value="flint">Group 1</option>
+            <option value="silver">Group 2</option>
+          </o-select>
+        </o-field>
+
+        <o-field label="Role">
+          <o-select placeholder="Select a role">
+            <option value="flint">Customer</option>
+            <option value="silver">Admin</option>
+            <option value="flint">Customer</option>
+            <option value="silver">Admin</option>
+            <option value="flint">Customer</option>
+            <option value="silver">Admin</option>
+          </o-select>
+        </o-field>
+      </div>
+      <div class="flex flex-row justify-end gap-x-2">
+        <o-button @click="onCancel()"> {{ cancelText }} </o-button>
+        <o-button @click="onConfirm()"> {{ confirmText }} </o-button>
+      </div>
+    </div>
+  </o-modal>
+  <!-- <div>
     <v-dialog v-model="value" persistent max-width="600px">
       <v-card>
         <v-card-title>
@@ -11,18 +66,18 @@
               <v-row justify="center">
                 <v-avatar size="150">
                   <v-img
-                    aspect-ratio="1"
                     v-if="selected"
+                    aspect-ratio="1"
                     :src="
                       selected.imageUrl ? selected.imageUrl : defaultImageUrl
                     "
                     :alt="selected.fullName"
                   />
                   <v-img
-                    aspect-ratio="1"
                     v-if="!selected"
+                    aspect-ratio="1"
                     :src="defaultImageUrl"
-                    aIlt="Upload Image"
+                    a-ilt="Upload Image"
                   />
                 </v-avatar>
               </v-row>
@@ -65,7 +120,7 @@
                       offset-y
                       min-width="auto"
                     >
-                      <template v-slot:activator="{ on, attrs }">
+                      <template #activator="{ on, attrs }">
                         <v-text-field
                           v-model="user.birthDate"
                           label="Birthday date"
@@ -78,10 +133,10 @@
                       </template>
                       <v-date-picker
                         v-model="user.birthDate"
-                        :active-picker.sync="datePicker.activePicker"
+                        v-model:active-picker="datePicker.activePicker"
                         :max="
                           new Date(
-                            Date.now() - new Date().getTimezoneOffset() * 60000,
+                            Date.now() - new Date().getTimezoneOffset() * 60000
                           )
                             .toISOString()
                             .substr(0, 10)
@@ -134,15 +189,15 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </div>
+  </div> -->
 </template>
 
 <script>
-import { Group, Role, User } from '../../store/models';
+import { Group, Role, User } from "../../store/models";
 // import { barcode as validator } from '../../validators';
 
 export default {
-  name: 'AddUserForm',
+  name: "AddUserForm",
   props: {
     title: {
       type: String,
@@ -150,31 +205,52 @@ export default {
     },
     confirmText: {
       type: String,
-      default: 'Save',
+      default: "Save",
     },
     cancelText: {
       type: String,
-      default: 'Cancel',
+      default: "Cancel",
     },
     selected: {
       type: Object,
+      default: null,
     },
-    value: {
+    active: {
       type: Boolean,
       default: false,
     },
   },
+  emits: ["update:active", "on-cancel", "on-confirm"],
   data() {
     return {
       user: new User(),
 
+      locale: "de-DE",
       datePicker: {
         activePicker: null,
         menu: false,
       },
 
-      defaultImageUrl: `${import.meta.env.VITE_API_URL}/static/images/default/avatar.png`,
+      defaultImageUrl: `${
+        import.meta.env.VITE_API_URL
+      }/static/images/default/avatar.png`,
     };
+  },
+  computed: {
+    isActive: {
+      get() {
+        return this.active;
+      },
+      set(newValue) {
+        this.$emit("update:active", newValue);
+      },
+    },
+    options() {
+      return {
+        groups: Group.all(),
+        roles: Role.all(),
+      };
+    },
   },
   watch: {
     value(val) {
@@ -183,7 +259,7 @@ export default {
         Group.api().$fetch();
         Role.api().$fetch();
         try {
-          this.$refs.form.resetValidation();
+          // this.$refs.form.resetValidation();
         } catch (e) {
           // ignore error
         }
@@ -193,34 +269,23 @@ export default {
       // eslint-disable-next-line no-unused-expressions
       val &&
         setTimeout(() => {
-          this.activePicker = 'YEAR';
+          this.activePicker = "YEAR";
         });
     },
   },
-  computed: {
-    options() {
-      return {
-        groups: Group.all(),
-        roles: Role.all(),
-      };
-    },
-  },
   methods: {
-    save(date) {
-      this.$refs.menu.save(date);
-    },
     onCancel() {
-      this.$emit('input', false);
-      this.$emit('on-cancel');
-      this.$refs.form.resetValidation();
+      this.$emit("update:active", false);
+      this.$emit("on-cancel");
+      // this.$refs.form.resetValidation();
     },
     onConfirm() {
-      if (this.$refs.form.validate()) {
-        this.user.uuid = this.selected?.uuid;
-        this.$emit('input', false);
-        this.$emit('on-confirm', this.user);
-        this.$refs.form.resetValidation();
-      }
+      // if (this.$refs.form.validate()) {
+      this.user.uuid = this.selected?.uuid;
+      this.$emit("update:active", false);
+      this.$emit("on-confirm", this.user);
+      // this.$refs.form.resetValidation();
+      // }
     },
   },
 };
