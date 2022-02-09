@@ -1,9 +1,9 @@
 <template>
   <div
-    class="h-screen float-left sidebar-content"
+    class="opacity-40 h-screen sidebar-content"
     :class="[reduce ? 'sidebar-reduce' : '']"
   >
-    <o-sidebar fullheight :reduce="reduce" open>
+    <o-sidebar fullheight :can-cancel="false" :reduce="reduce" open>
       <div>
         <router-link
           class="flex items-center justify-center py-2"
