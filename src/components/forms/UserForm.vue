@@ -1,6 +1,6 @@
 <template>
   <o-modal v-model:active="isActive" scroll="clip" :can-cancel="false">
-    <div class="p-4 overflow-visible">
+    <div class="p-4">
       <div class="pb-4">
         <h5>{{ title }}</h5>
       </div>
@@ -26,8 +26,7 @@
             placeholder="Click to select..."
             icon="calendar"
             trap-focus
-          >
-          </o-datepicker>
+          ></o-datepicker>
         </o-field>
 
         <o-field label="Group">
@@ -49,8 +48,8 @@
         </o-field>
       </div>
       <div class="flex flex-row justify-end gap-x-2">
-        <o-button @click="onCancel()"> {{ cancelText }} </o-button>
-        <o-button @click="onConfirm()"> {{ confirmText }} </o-button>
+        <o-button @click="onCancel()">{{ cancelText }}</o-button>
+        <o-button @click="onConfirm()">{{ confirmText }}</o-button>
       </div>
     </div>
   </o-modal>
@@ -189,7 +188,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </div> -->
+  </div>-->
 </template>
 
 <script>

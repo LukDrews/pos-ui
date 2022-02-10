@@ -1,5 +1,5 @@
 <template>
-  <section class="container mx-auto p-4 bg-white drop-shadow rounded">
+  <section class="container mx-auto p-4 bg-white rounded">
     <UserForm
       v-model:active="inputForm"
       title="Add user"
