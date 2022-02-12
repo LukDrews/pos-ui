@@ -84,14 +84,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    groups: {
-      type: Array,
-      default: () => [],
-    },
-    roles: {
-      type: Array,
-      default: () => [],
-    },
   },
   emits: ["update:active", "on-cancel", "on-confirm"],
   data() {
@@ -115,10 +107,20 @@ export default {
         this.$emit("update:active", newValue);
       },
     },
+    groups() {
+      return Group.query().orderBy("name").all();
+    },
+    roles() {
+      return Role.all();
+    },
   },
   watch: {
     active(val) {
       if (val) {
+        // Don't wait for api calls to resolve...
+        Group.api().$fetch();
+        Role.api().$fetch();
+
         if (this.selected) {
           this.user = new User(this.selected);
           this.date = new Date(this.selected.birthDate);

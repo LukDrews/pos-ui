@@ -4,8 +4,6 @@
       v-model:active="inputForm"
       title="Add user"
       :selected="selected"
-      :groups="groups"
-      :roles="roles"
       @on-confirm="addOrUpdateItem"
     />
     <ConfirmDialog
@@ -71,7 +69,7 @@
 <script>
 import apiClientMixin from "../mixins/apiClientMixin";
 
-import { User, Group, Role } from "../store/models";
+import { User } from "../store/models";
 import UserForm from "../components/forms/UserForm.vue";
 import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
 
@@ -95,16 +93,8 @@ export default {
     users() {
       return User.query().withAll().all();
     },
-    groups() {
-      return Group.query().orderBy("name").all();
-    },
-    roles() {
-      return Role.all();
-    },
   },
   created() {
-    Group.api().$fetch();
-    Role.api().$fetch();
     this.getItems();
   },
   methods: {
