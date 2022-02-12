@@ -129,7 +129,13 @@ export default {
       }
     },
     date(val) {
-      this.user.birthDate = this.date?.toISOString().slice(0, 10);
+      const dateString = new Date(
+        val.getTime() - val.getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .split("T")[0];
+
+      this.user.birthDate = dateString;
     },
   },
   methods: {

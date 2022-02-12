@@ -8,7 +8,10 @@
       :roles="roles"
       @on-confirm="addOrUpdateItem"
     />
-    <ConfirmDialog v-model="confirmDialog" @on-confirm="deleteItem(selected)" />
+    <ConfirmDialog
+      v-model:active="confirmDialog"
+      @on-confirm="deleteItem(selected)"
+    />
     <div class="flex justify-between items-center pb-4">
       <h3>Users</h3>
       <o-button icon-right="redo" @click="getItems()" />

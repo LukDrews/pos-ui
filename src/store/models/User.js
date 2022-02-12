@@ -1,25 +1,32 @@
-/* eslint-disable import/no-cycle */
-import ApiBase from './ApiBase';
-import { Role, Group, Order } from '.';
+import ApiBase from "./ApiBase";
+import { Role, Group, Order } from ".";
 
 export default class User extends ApiBase {
-  static entity = 'users';
+  static entity = "users";
 
-  static primaryKey = 'uuid';
+  static primaryKey = "uuid";
 
   static fields() {
+    const parseDate = (dateString) => {
+      if (dateString) {
+        let date = new Date(dateString);
+        return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+          .toISOString()
+          .split("T")[0];
+      } else {
+        return null;
+      }
+    };
     return {
       uuid: this.string(null),
       firstName: this.attr(null),
       lastName: this.attr(null),
-      birthDate: this.attr(null, (value) =>
-        value ? new Date(value).toISOString().slice(0, 10) : null,
-      ),
+      birthDate: this.attr(null, parseDate),
       roleUuid: this.attr(null),
-      role: this.belongsTo(Role, 'roleUuid'),
+      role: this.belongsTo(Role, "roleUuid"),
       groupUuid: this.attr(null),
-      group: this.belongsTo(Group, 'groupUuid'),
-      orders: this.hasMany(Order, 'userUuid'),
+      group: this.belongsTo(Group, "groupUuid"),
+      orders: this.hasMany(Order, "userUuid"),
       imageUrl: this.attr(null),
     };
   }
@@ -30,7 +37,7 @@ export default class User extends ApiBase {
 
   static apiConfig = {
     ...super.apiConfig,
-    url: '/users',
+    url: "/users",
   };
 
   static $createRemote(user) {
