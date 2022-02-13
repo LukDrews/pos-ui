@@ -1,124 +1,117 @@
 <template>
-  <v-container class="grow d-flex flex-column" style="height: 100%">
-    <ConfirmDialog v-model="confirmDialog" @on-confirm="deleteItem(selected)" />
-    <v-row class="flex-grow-1">
-      <v-col cols="8" class="pr-0">
-        <v-card height="100%">
-          <v-card-title> Cart </v-card-title>
-          <v-data-table
-            class="pa-4"
-            :headers="headers"
-            :items="cartItems"
-            :items-per-page="-1"
-            hide-default-footer
-          >
-            <template v-slot:item.count="{ item }">
-              <v-text-field
-                class="shrink"
-                reverse
-                v-model="item.count"
-                single-line
-                solo-inverted
-                dense
-                hide-details
-                prepend-icon="mdi-minus"
-                append-outer-icon="mdi-plus"
-                @blur="updateItem(item)"
-                @click:prepend="decrementCount(item)"
-                @click:append-outer="incrementCount(item)"
-              >
-              </v-text-field>
-            </template>
-            <template v-slot:item.controls="{ item }">
-              <v-icon @click.stop="showConfirmDialog(item)">
-                mdi-delete-outline
-              </v-icon>
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-col>
-      <v-col cols="4">
-        <v-card height="100%">
-          <v-card-title>Account Details</v-card-title>
-          <v-card-title class="mt-8">
-            <v-avatar size="150">
-              <v-img aspect-ratio="1" :src="imageUrl" :alt="user.fullName" />
-            </v-avatar>
-          </v-card-title>
-          <v-card-text>
-            <div class="my-4 text-subtitle-1">{{ user.fullName }}</div>
-            <!-- <p class="text-subtitle-1">Username:</p> -->
-            <div class="my-4 text-subtitle-1">Balance:</div>
+  <section class="container h-full mx-auto bg-gray-200">
+    <ConfirmDialog
+      v-model:active="confirmDialog"
+      @on-confirm="deleteItem(selected)"
+    />
 
-            <div class="text-subtitle-1"></div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+    <div class="flex h-full flex-row gap-x-4">
+      <div class="w-3/4 p-4 h-full bg-white rounded">
+        <div class="pb-4">
+          <h3>Cart</h3>
+        </div>
+
+        <o-table :data="data">
+          <o-table-column
+            v-slot="props"
+            field="product.name"
+            label="Name"
+            sortable
+          >
+            {{ props.row.product.name }}
+          </o-table-column>
+
+          <o-table-column
+            v-slot="props"
+            field="product.price"
+            label="Price"
+            sortable
+          >
+            {{ props.row.product.price }}
+          </o-table-column>
+
+          <o-table-column
+            v-slot="props"
+            field="count"
+            label="Count"
+            width="130"
+            sortable
+          >
+            <o-field>
+              <o-input
+                v-model="props.row.count"
+                numeric
+                group
+                expanded
+                icon="minus"
+                icon-clickable
+                icon-right="plus"
+                icon-right-clickable
+                @icon-click="decrementCount(props.row)"
+                @icon-right-click="incrementCount(props.row)"
+              >
+              </o-input>
+            </o-field>
+          </o-table-column>
+        </o-table>
+      </div>
+      <div class="w-1/4 p-4 h-full bg-white rounded">
+        <h3 class="text-center font-semibold">User</h3>
+        <br />
+        <div>Name: {{ user.fullName }}</div>
+        <div>Data: {{ user }}</div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
-import apiClientMixin from '../mixins/apiClientMixin';
+import apiClientMixin from "../mixins/apiClientMixin";
 
-import { barcode as validator } from '../validators';
-import { CartItem, User } from '../store/models';
-import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue';
+import { barcode as validator } from "../validators";
+import { CartItem, User } from "../store/models";
+import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
 
 export default {
-  name: 'Shop',
-  mixins: [apiClientMixin],
+  name: "ShopView",
   components: {
     ConfirmDialog,
   },
+  mixins: [apiClientMixin],
   data() {
     return {
       apiClient: CartItem,
 
-      barcode: '',
-      headers: [
-        { text: 'Product name', value: 'product.name' },
-        { text: 'Price', value: 'product.price' },
-        { text: 'Count', value: 'count', width: '153px' },
-        {
-          text: '',
-          value: 'controls',
-          sortable: false,
-          align: 'right',
-        },
-      ],
+      barcode: "",
+
       user: new User(),
-      defaultImageUrl: `${import.meta.env.VITE_API_URL}/static/images/default/avatar.png`,
 
       selected: null,
       confirmDialog: false,
     };
   },
-  created() {
-    window.addEventListener('keypress', this.processKey);
-    this.getItems();
-  },
-  destroyed() {
-    window.removeEventListener('keypress', this.processKey);
-  },
   computed: {
-    cartItems() {
+    data() {
       return CartItem.query().withAll().all();
     },
-    imageUrl() {
-      return this.user?.imageUrl ? this.user.imageUrl : this.defaultImageUrl;
-    },
+  },
+  created() {
+    window.addEventListener("keypress", this.processKey);
+    this.getItems();
+  },
+  unmounted() {
+    window.removeEventListener("keypress", this.processKey);
   },
   methods: {
     processKey(e) {
       if (
-        e.key === 'Enter' &&
+        e.key === "Enter" &&
         validator.isValidFormat(this.barcode, validator.formats.ean13)
       ) {
         this.addCartItem(this.barcode);
-        this.barcode = '';
+        this.barcode = "";
       } else if (
-        e.key === 'Enter' &&
+        e.key === "Enter" &&
         validator.isValidFormat(this.barcode, validator.formats.ean8)
       ) {
         User.api()
@@ -126,11 +119,11 @@ export default {
           .then((res) => {
             this.user = User.find(res.response.data.uuid);
           });
-        this.barcode = '';
-      } else if (e.key >= '0' && e.key <= '9') {
+        this.barcode = "";
+      } else if (e.key >= "0" && e.key <= "9") {
         this.barcode += e.key;
-      } else if (e.key === 'Enter') {
-        this.barcode = '';
+      } else if (e.key === "Enter") {
+        this.barcode = "";
       }
     },
     addCartItem(barcode) {
@@ -153,3 +146,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.o-input {
+  text-align: center;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <Navigation />
-  <div id="content" class="grow mt-12">
+  <div id="content" class="grow my-12 p-4">
     <router-view></router-view>
   </div>
 </template>
