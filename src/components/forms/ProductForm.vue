@@ -1,69 +1,45 @@
 <template>
-  <div>
-    <v-dialog v-model="value" persistent max-width="600px">
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">{{ title }}</span>
-        </v-card-title>
-        <v-card-text>
-          <v-form ref="form">
-            <v-container>
-              <v-row>
-                <v-col cols="6" sm="6" md="6">
-                  <v-text-field
-                    v-model="product.name"
-                    label="Name*"
-                    :rules="productNameRules"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="6" sm="6" md="6">
-                  <v-text-field
-                    v-model="product.barcode"
-                    label="Barcode*"
-                    :rules="productBarcodeRules"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="6" sm="6" md="6">
-                  <v-text-field
-                    v-model.number="product.price"
-                    label="Price*"
-                    :rules="productPriceRules"
-                    type="number"
-                    min="0"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <small>*indicates required field</small>
-            </v-container>
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="onCancel()">
-            {{ cancelText }}
-          </v-btn>
-          <v-btn color="blue darken-1" text @click="onConfirm()">
-            {{ confirmText }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
+  <o-modal v-model:active="isActive" scroll="clip" :can-cancel="false">
+    <div class="p-4">
+      <div class="pb-4">
+        <h5>{{ title }}</h5>
+      </div>
+      <div class="pb-4">
+        <o-field grouped label="Name">
+          <o-input v-model="product.name" placeholder="Name" expanded></o-input>
+        </o-field>
+
+        <o-field grouped label="Barcode">
+          <o-input
+            v-model="product.barcode"
+            placeholder="Barcode"
+            expanded
+          ></o-input>
+        </o-field>
+
+        <o-field grouped label="Price">
+          <o-input
+            v-model.number="product.price"
+            placeholder="Price"
+            type="number"
+            expanded
+          ></o-input>
+        </o-field>
+      </div>
+      <div class="flex flex-row justify-end gap-x-2">
+        <o-button @click="onCancel()">{{ cancelText }}</o-button>
+        <o-button @click="onConfirm()">{{ confirmText }}</o-button>
+      </div>
+    </div>
+  </o-modal>
 </template>
 
 <script>
-import { Product } from '../../store/models';
-import { barcode as validator } from '../../validators';
+import { Product } from "../../store/models";
+import { barcode as validator } from "../../validators";
 
 export default {
-  name: 'AddProductForm',
+  name: "AddProductForm",
   props: {
     title: {
       type: String,
@@ -71,47 +47,62 @@ export default {
     },
     confirmText: {
       type: String,
-      default: 'Save',
+      default: "Save",
     },
     cancelText: {
       type: String,
-      default: 'Cancel',
+      default: "Cancel",
     },
     selected: {
       type: Object,
+      default: null,
     },
-    value: {
+    active: {
       type: Boolean,
       default: false,
     },
   },
+  emits: ["update:active", "on-cancel", "on-confirm"],
   data() {
     return {
       product: new Product(),
       productNameRules: [
-        (v) => !!v || 'Name is required',
+        (v) => !!v || "Name is required",
         (v) =>
           !this.products
             .map((r) => r.name)
             .filter((name) => name !== this.selected?.name)
-            .includes(v) || 'Name already used',
+            .includes(v) || "Name already used",
       ],
       productBarcodeRules: [
-        (v) => !!v || 'Barcode is required',
+        (v) => !!v || "Barcode is required",
         (v) =>
           !this.products
             .map((r) => r.barcode)
             .filter((barcode) => barcode !== this.selected?.barcode)
-            .includes(v) || 'Barcode already used',
+            .includes(v) || "Barcode already used",
         (v) =>
           validator.isValidFormat(v, validator.formats.ean13) ||
-          'Barcode is not valid (EAN-13)',
+          "Barcode is not valid (EAN-13)",
       ],
-      productPriceRules: [(v) => !!v || 'Price is required'],
+      productPriceRules: [(v) => !!v || "Price is required"],
     };
   },
+  computed: {
+    products() {
+      return Product.all();
+    },
+    isActive: {
+      get() {
+        return this.active;
+      },
+      set(newValue) {
+        this.$emit("update:active", newValue);
+      },
+    },
+  },
   watch: {
-    value(val) {
+    active(val) {
       if (val) {
         this.product = this.selected
           ? new Product(this.selected)
@@ -120,24 +111,15 @@ export default {
       }
     },
   },
-  computed: {
-    products() {
-      return Product.all();
-    },
-  },
   methods: {
     onCancel() {
-      this.$emit('input', false);
-      this.$emit('on-cancel');
-      this.$refs.form.resetValidation();
+      this.$emit("update:active", false);
+      this.$emit("on-cancel");
     },
     onConfirm() {
-      if (this.$refs.form.validate()) {
-        this.product.uuid = this.selected?.uuid;
-        this.$emit('input', false);
-        this.$emit('on-confirm', this.product);
-        this.$refs.form.resetValidation();
-      }
+      this.product.uuid = this.selected?.uuid;
+      this.$emit("update:active", false);
+      this.$emit("on-confirm", this.product);
     },
   },
 };

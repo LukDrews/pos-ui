@@ -1,96 +1,104 @@
 <template>
-  <v-container>
+  <section class="container mx-auto p-4 bg-white rounded">
     <UserForm
+      v-model:active="inputForm"
       title="Add user"
       :selected="selected"
-      v-model="inputForm"
       @on-confirm="addOrUpdateItem"
     />
-    <ConfirmDialog v-model="confirmDialog" @on-confirm="deleteItem(selected)" />
+    <ConfirmDialog
+      v-model:active="confirmDialog"
+      @on-confirm="deleteItem(selected)"
+    />
 
-    <v-card>
-      <v-card-title class="d-flex justify-space-between">
-        Users
-        <v-btn small @click="getItems()">
-          <v-icon>mdi-reload</v-icon>
-        </v-btn>
-      </v-card-title>
-      <v-card-actions class="ps-4">
-        <v-btn class="primary" @click.stop="showForm(null)">Add user</v-btn>
-      </v-card-actions>
-      <v-card-text>
-        <v-data-table
-          class="pa-4"
-          :headers="headers"
-          :items="users"
-          :items-per-page="-1"
-        >
-          <template v-slot:item.avatar="{ item }">
-            <v-avatar size="36">
-              <v-img :src="item.imageUrl" :alt="item.fullName" />
-            </v-avatar>
-          </template>
+    <div class="flex justify-between items-center pb-4">
+      <h3>Users</h3>
+      <o-button icon-right="redo" @click="getItems()" />
+    </div>
 
-          <!-- Source: https://stackoverflow.com/a/59084212 -->
-          <!-- https://vuetifyjs.com/en/components/data-tables/#item -->
-          <template v-slot:item.controls="{ item }">
-            <v-icon class="mr-2" @click.stop="showForm(item)">
-              mdi-square-edit-outline
-            </v-icon>
-            <v-icon @click.stop="showConfirmDialog(item)">
-              mdi-delete-outline
-            </v-icon>
-          </template>
-        </v-data-table>
-      </v-card-text>
-    </v-card>
-  </v-container>
+    <div class="pb-4">
+      <o-button @click.stop="showForm(null)">Add user</o-button>
+    </div>
+
+    <o-table :data="data">
+      <o-table-column
+        v-slot="props"
+        field="firstName"
+        label="First Name"
+        sortable
+        >{{ props.row.firstName }}</o-table-column
+      >
+
+      <o-table-column
+        v-slot="props"
+        field="lastName"
+        label="Last Name"
+        sortable
+        >{{ props.row.lastName }}</o-table-column
+      >
+
+      <o-table-column
+        v-slot="props"
+        field="group.name"
+        label="Group"
+        sortable
+        >{{ props.row.group.name }}</o-table-column
+      >
+
+      <o-table-column v-slot="props" field="birthDate" label="Date" sortable>
+        {{ props.row.birthDate }}
+      </o-table-column>
+
+      <o-table-column v-slot="props" width="80">
+        <div class="float-right">
+          <o-icon
+            clickable
+            class="w-6 h-6"
+            icon="edit"
+            @click.stop="showForm(props.row)"
+          />
+          <o-icon
+            clickable
+            class="w-6 h-6"
+            icon="trash"
+            @click.stop="showConfirmDialog(props.row)"
+          />
+        </div>
+      </o-table-column>
+    </o-table>
+  </section>
 </template>
 
 <script>
-import apiClientMixin from '../mixins/apiClientMixin';
+import apiClientMixin from "../mixins/apiClientMixin";
 
-import { User } from '../store/models';
-import UserForm from '../components/forms/UserForm.vue';
-import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue';
+import { User } from "../store/models";
+import UserForm from "../components/forms/UserForm.vue";
+import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
 
 export default {
-  name: 'Users',
-  mixins: [apiClientMixin],
+  name: "UserView",
   components: {
     UserForm,
     ConfirmDialog,
   },
+  mixins: [apiClientMixin],
   data() {
     return {
       apiClient: User,
-
-      headers: [
-        { text: '', value: 'avatar', sortable: false },
-        { text: 'First name', value: 'firstName' },
-        { text: 'Last name', value: 'lastName' },
-        { text: 'Group', value: 'group.name' },
-        { text: 'Date', value: 'birthDate' },
-        {
-          text: '',
-          value: 'controls',
-          sortable: false,
-          align: 'right',
-        },
-      ],
 
       selected: null,
       inputForm: false,
       confirmDialog: false,
     };
   },
-  created() {
-    this.getItems();
-  },
   computed: {
-    users() {
+    data() {
       return User.query().withAll().all();
     },
+  },
+  created() {
+    this.getItems();
   },
   methods: {
     showForm(selected) {

@@ -1,60 +1,58 @@
 <template>
-  <v-dialog v-model="value" width="500">
-    <!-- <template v-slot:activator="{ on, attrs }">
-      <v-btn small color="red" dark v-bind="attrs" v-on="on">
-        <slot>
-          <v-icon>mdi-delete-outline</v-icon>
-        </slot>
-      </v-btn>
-    </template> -->
-
-    <v-card>
-      <v-card-title class="text-h5"> {{ title }} </v-card-title>
-
-      <v-card-text> {{ body }} </v-card-text>
-
-      <v-divider></v-divider>
-
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="onCancel()">
-          {{ buttons[0] }}
-        </v-btn>
-        <v-btn color="red lighten-2" text @click="onConfirm()">
-          {{ buttons[1] }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <o-modal v-model:active="isActive" scroll="clip" :can-cancel="false">
+    <div class="p-4 w-96">
+      <div v-if="title" class="pb-8">
+        <h5>{{ title }}</h5>
+      </div>
+      <div class="pb-4">
+        {{ body }}
+      </div>
+      <div class="flex flex-row justify-end gap-x-2">
+        <o-button @click="onCancel()">{{ buttons[0] }}</o-button>
+        <o-button @click="onConfirm()">{{ buttons[1] }}</o-button>
+      </div>
+    </div>
+  </o-modal>
 </template>
 
 <script>
 export default {
-  name: 'DeleteDialog',
+  name: "DeleteDialog",
   props: {
     title: String,
     body: {
       type: String,
-      default: 'Are you sure?',
+      default: "Are you sure?",
     },
     buttons: {
       type: Array,
-      default: () => ['Cancel', 'Confirm'],
+      default: () => ["Cancel", "Confirm"],
     },
-    value: {
+    active: {
       type: Boolean,
       default: false,
     },
   },
+  emits: ["update:active", "on-cancel", "on-confirm"],
+  computed: {
+    isActive: {
+      get() {
+        return this.active;
+      },
+      set(newValue) {
+        this.$emit("update:active", newValue);
+      },
+    },
+  },
   methods: {
     onConfirm() {
-      this.$emit('input', false);
-      this.$emit('on-confirm');
+      this.$emit("update:active", false);
+      this.$emit("on-confirm");
     },
     onCancel() {
-      this.$emit('input', false);
-      this.$emit('on-cancel');
-    }
+      this.$emit("update:active", false);
+      this.$emit("on-cancel");
+    },
   },
 };
 </script>

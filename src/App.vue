@@ -1,24 +1,23 @@
 <template>
-  <v-app>
-    <Navigation />
-
-    <v-main>
-      <router-view />
-    </v-main>
-  </v-app>
+  <Navigation />
+  <div id="content" class="grow my-12 p-4">
+    <router-view></router-view>
+  </div>
 </template>
 
-<script>
-import Navigation from './views/Navigation.vue';
+<script setup>
+import Navigation from "./views/Navigation.vue";
+import { User } from "./store/models";
 
-export default {
-  name: 'App',
-  components: {
-    Navigation,
-  },
-
-  data: () => ({
-    //
-  }),
-};
+User.api().$fetch();
 </script>
+
+<style>
+#app {
+  display: flex;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @apply bg-gray-200;
+}
+</style>

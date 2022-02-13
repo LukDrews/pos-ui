@@ -1,95 +1,77 @@
 <template>
-  <v-container>
+  <section class="container mx-auto p-4 bg-white rounded">
     <RoleForm
+      v-model:active="inputForm"
       title="Add role"
       :selected="selected"
-      v-model="inputForm"
       @on-confirm="addOrUpdateItem"
     />
-    <ConfirmDialog v-model="confirmDialog" @on-confirm="deleteItem(selected)" />
+    <ConfirmDialog
+      v-model:active="confirmDialog"
+      @on-confirm="deleteItem(selected)"
+    />
+    <div class="flex justify-between items-center pb-4">
+      <h3>Roles</h3>
+      <o-button icon-right="redo" @click="getItems()" />
+    </div>
+    <div class="pb-4">
+      <o-button @click.stop="showForm(null)">Add role</o-button>
+    </div>
+    <o-table :data="data">
+      <o-table-column v-slot="props" field="name" label="Name" sortable>
+        {{ props.row.name }}
+      </o-table-column>
 
-    <v-snackbar color="red" v-model="snackbar" :timeout="timeout">
-      {{ snackbarText }}
-      <template v-slot:action="{ attrs }">
-        <v-btn text v-bind="attrs" @click="snackbar = false"> Close </v-btn>
-      </template>
-    </v-snackbar>
-
-    <v-card>
-      <v-card-title class="d-flex justify-space-between">
-        Roles
-        <v-btn small @click="getItems()">
-          <v-icon>mdi-reload</v-icon>
-        </v-btn>
-      </v-card-title>
-      <v-card-actions class="ps-4">
-        <v-btn class="primary" @click.stop="showForm(null)">Add role</v-btn>
-      </v-card-actions>
-      <v-card-text>
-        <v-data-table
-          class="pa-4"
-          :headers="headers"
-          :items="roles"
-          :items-per-page="-1"
-          hide-default-footer
-        >
-          <template v-slot:item.controls="{ item }">
-            <v-icon class="mr-2" @click.stop="showForm(item)">
-              mdi-square-edit-outline
-            </v-icon>
-            <v-icon @click.stop="showConfirmDialog(item)">
-              mdi-delete-outline
-            </v-icon>
-          </template>
-        </v-data-table>
-      </v-card-text>
-    </v-card>
-  </v-container>
+      <o-table-column v-slot="props" width="80">
+        <div class="float-right">
+          <o-icon
+            clickable
+            class="w-6 h-6"
+            icon="edit"
+            @click.stop="showForm(props.row)"
+          />
+          <o-icon
+            clickable
+            class="w-6 h-6"
+            icon="trash"
+            @click.stop="showConfirmDialog(props.row)"
+          />
+        </div>
+      </o-table-column>
+    </o-table>
+  </section>
 </template>
 
 <script>
-import apiClientMixin from '../mixins/apiClientMixin';
+import apiClientMixin from "../mixins/apiClientMixin";
 
-import { Role } from '../store/models';
-import RoleForm from '../components/forms/RoleForm.vue';
-import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue';
+import { Role } from "../store/models";
+import RoleForm from "../components/forms/RoleForm.vue";
+import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
 
 export default {
-  name: 'Users',
-  mixins: [apiClientMixin],
+  name: "RoleView",
   components: {
     RoleForm,
     ConfirmDialog,
   },
+  mixins: [apiClientMixin],
   data() {
     return {
       apiClient: Role,
-
-      headers: [
-        { text: 'Name', value: 'name' },
-        {
-          text: '',
-          value: 'controls',
-          sortable: false,
-          align: 'right',
-        },
-      ],
-      snackbar: false,
-      snackbarText: `Can't delete role. Remove users first.${null}`,
-      timeout: 4000,
 
       selected: null,
       inputForm: false,
       confirmDialog: false,
     };
   },
-  created() {
-    this.getItems();
-  },
   computed: {
-    roles() {
+    data() {
       return Role.query().withAll().all();
     },
+  },
+  created() {
+    this.getItems();
   },
   methods: {
     deleteItem(selected) {

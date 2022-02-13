@@ -1,88 +1,89 @@
 <template>
-  <v-container>
+  <section class="container mx-auto p-4 bg-white rounded">
     <ProductForm
+      v-model:active="inputForm"
       title="Add product"
       :selected="selected"
-      v-model="inputForm"
-      @on-confirm="addUpdateProduct"
+      @on-confirm="addOrUpdateItem"
     />
-    <ConfirmDialog v-model="confirmDialog" @on-confirm="deleteItem(selected)" />
+    <ConfirmDialog
+      v-model:active="confirmDialog"
+      @on-confirm="deleteItem(selected)"
+    />
 
-    <v-card>
-      <v-card-title> Products </v-card-title>
-      <v-card-actions class="ps-4">
-        <v-btn class="primary" @click.stop="showForm(null)">Add Product</v-btn>
-      </v-card-actions>
-      <v-card-text>
-        <v-data-table
-          class="pa-4"
-          :headers="headers"
-          :items="products"
-          :items-per-page="-1"
-          hide-default-footer
-        >
-          <template v-slot:item.controls="{ item }">
-            <v-icon class="mr-2" @click.stop="showForm(item)">
-              mdi-square-edit-outline
-            </v-icon>
-            <v-icon @click.stop="showConfirmDialog(item)">
-              mdi-delete-outline
-            </v-icon>
-          </template>
-        </v-data-table>
-      </v-card-text>
-    </v-card>
-  </v-container>
+    <div class="flex justify-between items-center pb-4">
+      <h3>Products</h3>
+      <o-button icon-right="redo" @click="getItems()" />
+    </div>
+
+    <div class="pb-4">
+      <o-button @click.stop="showForm(null)">Add product</o-button>
+    </div>
+
+    <o-table :data="data">
+      <o-table-column v-slot="props" field="name" label="Name" sortable>
+        {{ props.row.name }}
+      </o-table-column>
+
+      <o-table-column v-slot="props" field="barcode" label="Barcode" sortable>
+        {{ props.row.barcode }}
+      </o-table-column>
+
+      <o-table-column v-slot="props" field="price" label="Price" sortable>
+        {{ props.row.price }}
+      </o-table-column>
+
+      <o-table-column v-slot="props" width="80">
+        <div class="float-right">
+          <o-icon
+            clickable
+            class="w-6 h-6"
+            icon="edit"
+            @click.stop="showForm(props.row)"
+          />
+          <o-icon
+            clickable
+            class="w-6 h-6"
+            icon="trash"
+            @click.stop="showConfirmDialog(props.row)"
+          />
+        </div>
+      </o-table-column>
+    </o-table>
+  </section>
 </template>
 
 <script>
-import apiClientMixin from '../mixins/apiClientMixin';
-import { Product } from '../store/models';
-import ProductForm from '../components/forms/ProductForm.vue';
-import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue';
+import apiClientMixin from "../mixins/apiClientMixin";
+import { Product } from "../store/models";
+import ProductForm from "../components/forms/ProductForm.vue";
+import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
 
 export default {
-  name: 'Products',
-  mixins: [apiClientMixin],
+  name: "ProductView",
   components: {
     ProductForm,
     ConfirmDialog,
   },
+  mixins: [apiClientMixin],
   data() {
     return {
       apiClient: Product,
-      headers: [
-        { text: 'Product name', value: 'name' },
-        { text: 'Price', value: 'price' },
-        { text: 'Barcode', value: 'barcode' },
-        {
-          text: '',
-          value: 'controls',
-          sortable: false,
-          align: 'right',
-        },
-      ],
-      confirmDialog: false,
-      inputForm: false,
+
       selected: null,
+      inputForm: false,
+      confirmDialog: false,
     };
+  },
+  computed: {
+    data() {
+      return Product.query().withAll().all();
+    },
   },
   created() {
     this.getItems();
   },
-  computed: {
-    products() {
-      return Product.query().withAll().all();
-    },
-  },
   methods: {
-    addUpdateProduct(product) {
-      if (product.uuid) {
-        this.updateItem(product);
-      } else {
-        this.addItem(product);
-      }
-    },
     showForm(product) {
       this.inputForm = true;
       this.selected = product;
