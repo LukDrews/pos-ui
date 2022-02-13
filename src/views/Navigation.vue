@@ -32,9 +32,9 @@
               v-for="item in items"
               :key="item.title"
               :reduce="reduce"
-              :title="item.title"
-              :icon="item.icon"
-              :path="item.path"
+              :item="item"
+              :selected="selected"
+              @click="selected = item"
             ></NavigationItem>
           </ul>
         </div>
@@ -55,6 +55,7 @@ export default {
   },
   data: () => ({
     reduce: false,
+    selected: null,
     items: [
       { title: "Home", icon: "home", path: "/" },
       { title: "Shop", icon: "store", path: "/shop" },
