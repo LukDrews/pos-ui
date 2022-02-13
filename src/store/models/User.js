@@ -17,10 +17,11 @@ export default class User extends ApiBase {
         return null;
       }
     };
+
     return {
       uuid: this.string(null),
-      firstName: this.attr(null),
-      lastName: this.attr(null),
+      firstName: this.attr(""),
+      lastName: this.attr(""),
       birthDate: this.attr(null, parseDate),
       roleUuid: this.attr(null),
       role: this.belongsTo(Role, "roleUuid"),
