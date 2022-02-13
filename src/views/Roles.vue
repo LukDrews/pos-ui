@@ -15,9 +15,9 @@
       <o-button icon-right="redo" @click="getItems()" />
     </div>
     <div class="pb-4">
-      <o-button @click.stop="showForm(null)">Add Roles</o-button>
+      <o-button @click.stop="showForm(null)">Add role</o-button>
     </div>
-    <o-table :data="roles">
+    <o-table :data="data">
       <o-table-column v-slot="props" field="name" label="Name" sortable>
         {{ props.row.name }}
       </o-table-column>
@@ -50,7 +50,7 @@ import RoleForm from "../components/forms/RoleForm.vue";
 import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
 
 export default {
-  name: "Users",
+  name: "RoleView",
   components: {
     RoleForm,
     ConfirmDialog,
@@ -60,26 +60,13 @@ export default {
     return {
       apiClient: Role,
 
-      headers: [
-        { text: "Name", value: "name" },
-        {
-          text: "",
-          value: "controls",
-          sortable: false,
-          align: "right",
-        },
-      ],
-      snackbar: false,
-      snackbarText: `Can't delete role. Remove users first.${null}`,
-      timeout: 4000,
-
       selected: null,
       inputForm: false,
       confirmDialog: false,
     };
   },
   computed: {
-    roles() {
+    data() {
       return Role.query().withAll().all();
     },
   },

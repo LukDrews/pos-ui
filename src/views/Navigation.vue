@@ -49,7 +49,7 @@
  */
 import NavigationItem from "../components/NavigationItem.vue";
 export default {
-  name: "Navigation",
+  name: "NavigationBar",
   components: {
     NavigationItem,
   },

@@ -10,14 +10,17 @@
       v-model:active="confirmDialog"
       @on-confirm="deleteItem(selected)"
     />
+
     <div class="flex justify-between items-center pb-4">
       <h3>Products</h3>
       <o-button icon-right="redo" @click="getItems()" />
     </div>
+
     <div class="pb-4">
       <o-button @click.stop="showForm(null)">Add product</o-button>
     </div>
-    <o-table :data="products">
+
+    <o-table :data="data">
       <o-table-column v-slot="props" field="name" label="Name" sortable>
         {{ props.row.name }}
       </o-table-column>
@@ -57,7 +60,7 @@ import ProductForm from "../components/forms/ProductForm.vue";
 import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
 
 export default {
-  name: "Products",
+  name: "ProductView",
   components: {
     ProductForm,
     ConfirmDialog,
@@ -73,7 +76,7 @@ export default {
     };
   },
   computed: {
-    products() {
+    data() {
       return Product.query().withAll().all();
     },
   },

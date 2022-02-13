@@ -10,14 +10,17 @@
       v-model:active="confirmDialog"
       @on-confirm="deleteItem(selected)"
     />
+
     <div class="flex justify-between items-center pb-4">
       <h3>Users</h3>
       <o-button icon-right="redo" @click="getItems()" />
     </div>
+
     <div class="pb-4">
-      <o-button @click.stop="showForm(null)">Add User</o-button>
+      <o-button @click.stop="showForm(null)">Add user</o-button>
     </div>
-    <o-table :data="users">
+
+    <o-table :data="data">
       <o-table-column
         v-slot="props"
         field="firstName"
@@ -74,7 +77,7 @@ import UserForm from "../components/forms/UserForm.vue";
 import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
 
 export default {
-  name: "Users",
+  name: "UserView",
   components: {
     UserForm,
     ConfirmDialog,
@@ -90,7 +93,7 @@ export default {
     };
   },
   computed: {
-    users() {
+    data() {
       return User.query().withAll().all();
     },
   },
@@ -99,12 +102,10 @@ export default {
   },
   methods: {
     showForm(selected) {
-      console.log(selected);
       this.inputForm = true;
       this.selected = selected;
     },
     showConfirmDialog(selected) {
-      console.log(selected);
       this.confirmDialog = true;
       this.selected = selected;
     },
