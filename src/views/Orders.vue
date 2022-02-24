@@ -23,8 +23,8 @@
         {{ getCount(props.row.items) }}
       </o-table-column>
 
-      <o-table-column v-slot="props" field="amount" label="Amount" sortable>
-        {{ props.row.amount }}
+      <o-table-column v-slot="props" label="Amount" sortable>
+        {{ props.row.amountFormatted }}
       </o-table-column>
 
       <o-table-column v-slot="props" field="createdAt" label="Date" sortable>

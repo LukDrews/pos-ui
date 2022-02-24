@@ -21,13 +21,8 @@
             {{ props.row.product.name }}
           </o-table-column>
 
-          <o-table-column
-            v-slot="props"
-            field="product.price"
-            label="Price"
-            sortable
-          >
-            {{ props.row.product.price }}
+          <o-table-column v-slot="props" label="Price" sortable>
+            {{ props.row.product.priceFormatted }}
           </o-table-column>
 
           <o-table-column
@@ -68,7 +63,7 @@
 <script>
 import apiClientMixin from "../mixins/apiClientMixin";
 
-import { barcode as validator } from "../validators";
+import { barcode as validator } from "../utils/validators";
 import { CartItem, User } from "../store/models";
 import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
 

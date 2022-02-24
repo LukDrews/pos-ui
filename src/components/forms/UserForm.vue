@@ -59,7 +59,7 @@
 
 <script>
 import { Group, Role, User } from "../../store/models";
-// import { barcode as validator } from '../../validators';
+// import { barcode as validator } from '../../utils/validators';
 
 export default {
   name: "AddUserForm",

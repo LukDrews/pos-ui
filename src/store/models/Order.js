@@ -1,6 +1,8 @@
 import ApiBase from "./ApiBase";
 import { User, OrderItem } from ".";
 
+import formatters from "../../utils/formatters";
+
 export default class Order extends ApiBase {
   static entity = "orders";
 
@@ -15,6 +17,10 @@ export default class Order extends ApiBase {
       amount: this.attr(null),
       createdAt: this.attr(null),
     };
+  }
+
+  get amountFormatted() {
+    return formatters.toCurrencyFormat(this.amount);
   }
 
   static apiConfig = {

@@ -30,7 +30,7 @@
       </o-table-column>
 
       <o-table-column v-slot="props" field="price" label="Price" sortable>
-        {{ props.row.price }}
+        {{ props.row.priceFormatted }}
       </o-table-column>
 
       <o-table-column v-slot="props" width="80">
