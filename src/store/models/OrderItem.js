@@ -1,8 +1,6 @@
 import { Model } from "@vuex-orm/core";
 import { Product, Order } from ".";
 
-import formatters from "../../utils/formatters";
-
 export default class OrderItem extends Model {
   static entity = "orderItems";
 
@@ -16,11 +14,6 @@ export default class OrderItem extends Model {
       productUuid: this.string(null),
       product: this.belongsTo(Product, "productUuid"),
       count: this.number(null),
-      amount: this.number(null),
     };
-  }
-
-  get amountFormatted() {
-    return formatters.toCurrencyFormat(this.amount);
   }
 }
