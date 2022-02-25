@@ -1,6 +1,8 @@
 import ApiBase from "./ApiBase";
 import { Role, Group, Order, Transaction } from ".";
 
+import formatters from "../../utils/formatters";
+
 export default class User extends ApiBase {
   static entity = "users";
 
@@ -29,12 +31,17 @@ export default class User extends ApiBase {
       group: this.belongsTo(Group, "groupUuid"),
       orders: this.hasMany(Order, "userUuid"),
       transactions: this.hasMany(Transaction, "userUuid"),
+      balance: this.number(null),
       imageUrl: this.attr(null),
     };
   }
 
   get fullName() {
     return `${this.firstName} ${this.lastName}`;
+  }
+
+  get balanceFormatted() {
+    return formatters.toCurrencyFormat(this.balance);
   }
 
   static apiConfig = {

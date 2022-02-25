@@ -49,6 +49,15 @@
         {{ props.row.birthDate }}
       </o-table-column>
 
+      <o-table-column
+        v-slot="props"
+        field="balanceFormatted"
+        label="Balance"
+        sortable
+      >
+        {{ props.row.balanceFormatted }}
+      </o-table-column>
+
       <o-table-column v-slot="props" width="80">
         <div class="float-right">
           <o-icon
