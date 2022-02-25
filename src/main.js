@@ -26,6 +26,7 @@ import {
   Order,
   OrderItem,
   CartItem,
+  Transaction,
 } from "./store/models";
 
 VuexORM.use(VuexORMAxios, {
@@ -43,6 +44,7 @@ database.register(Product);
 database.register(Order);
 database.register(OrderItem);
 database.register(CartItem);
+database.register(Transaction);
 
 // Create Vuex Store and register database through Vuex ORM.
 const store = new Vuex.createStore({

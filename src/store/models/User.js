@@ -1,5 +1,5 @@
 import ApiBase from "./ApiBase";
-import { Role, Group, Order } from ".";
+import { Role, Group, Order, Transaction } from ".";
 
 export default class User extends ApiBase {
   static entity = "users";
@@ -28,6 +28,7 @@ export default class User extends ApiBase {
       groupUuid: this.attr(null),
       group: this.belongsTo(Group, "groupUuid"),
       orders: this.hasMany(Order, "userUuid"),
+      transactions: this.hasMany(Transaction, "userUuid"),
       imageUrl: this.attr(null),
     };
   }
