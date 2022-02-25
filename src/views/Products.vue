@@ -29,7 +29,12 @@
         {{ props.row.barcode }}
       </o-table-column>
 
-      <o-table-column v-slot="props" field="price" label="Price" sortable>
+      <o-table-column
+        v-slot="props"
+        field="priceFormatted"
+        label="Price"
+        sortable
+      >
         {{ props.row.priceFormatted }}
       </o-table-column>
 

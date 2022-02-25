@@ -57,12 +57,12 @@ export default {
     reduce: false,
     selected: null,
     items: [
-      { title: "Home", icon: "home", path: "/" },
+      // { title: "Home", icon: "home", path: "/" },
       { title: "Shop", icon: "store", path: "/shop" },
       { title: "Products", icon: "tag", path: "/products" },
       { title: "Users", icon: "user", path: "/users" },
       { title: "Orders", icon: "shopping-cart", path: "/orders" },
-      { title: "Statistics", icon: "chart-line", path: "/statistics" },
+      // { title: "Statistics", icon: "chart-line", path: "/statistics" },
       {
         title: "Transactions",
         icon: "credit-card",

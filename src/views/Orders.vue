@@ -19,11 +19,16 @@
         >{{ props.row.user.fullName }}</o-table-column
       >
 
-      <o-table-column v-slot="props" label="Items" sortable>
-        {{ getCount(props.row.items) }}
+      <o-table-column v-slot="props" field="itemCount" label="Items" sortable>
+        {{ props.row.itemCount }}
       </o-table-column>
 
-      <o-table-column v-slot="props" label="Amount" sortable>
+      <o-table-column
+        v-slot="props"
+        field="amountFormatted"
+        label="Amount"
+        sortable
+      >
         {{ props.row.amountFormatted }}
       </o-table-column>
 
@@ -36,15 +41,15 @@
           <o-icon
             clickable
             class="w-6 h-6"
-            icon="edit"
+            icon="info"
             @click.stop="showForm(props.row)"
           />
-          <o-icon
+          <!-- <o-icon
             clickable
             class="w-6 h-6"
             icon="trash"
             @click.stop="showConfirmDialog(props.row)"
-          />
+          /> -->
         </div>
       </o-table-column>
     </o-table>
@@ -79,9 +84,6 @@ export default {
     this.getItems();
   },
   methods: {
-    getCount(items) {
-      return items.reduce((acc, curr) => acc + Number(curr.count), 0);
-    },
     showForm(order) {
       this.inputForm = true;
       this.selected = order;
