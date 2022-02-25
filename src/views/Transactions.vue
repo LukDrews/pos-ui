@@ -1,8 +1,18 @@
 <template>
   <section class="container mx-auto p-4 bg-white rounded">
+    <TransactionForm
+      v-model:active="inputForm"
+      title="Create transaction"
+      @on-confirm="addItem"
+    />
+
     <div class="flex justify-between items-center pb-4">
       <h3>Transactions</h3>
       <o-button icon-right="redo" @click="getItems()" />
+    </div>
+
+    <div class="pb-4">
+      <o-button @click.stop="showForm(null)">Create transaction</o-button>
     </div>
 
     <o-table :data="data">
@@ -48,23 +58,25 @@
 <script>
 import apiClientMixin from "../mixins/apiClientMixin";
 import { Transaction } from "../store/models";
-
+import TransactionForm from "../components/forms/TransactionForm.vue";
 export default {
   name: "TransactionView",
-  components: {},
+  components: {
+    TransactionForm,
+  },
   mixins: [apiClientMixin],
   data() {
     return {
       apiClient: Transaction,
 
       selected: null,
+      inputForm: false,
       confirmDialog: false,
     };
   },
   computed: {
     data() {
       const d = Transaction.query().withAll().all();
-      console.log(d);
       return d;
     },
   },
