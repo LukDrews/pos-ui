@@ -6,23 +6,23 @@ export default {
   },
   methods: {
     getItems() {
-      this.apiClient.api().$fetch();
+      return this.apiClient.api().$fetch();
     },
     addItem(item) {
-      this.apiClient.api().$create(item);
+      return this.apiClient.api().$create(item);
     },
     updateItem(item) {
-      this.apiClient.api().$update(item.uuid, item);
+      return this.apiClient.api().$update(item.uuid, item);
     },
     addOrUpdateItem(item) {
       if (item.uuid) {
-        this.updateItem(item);
+        return this.updateItem(item);
       } else {
-        this.addItem(item);
+        return this.addItem(item);
       }
     },
     deleteItem(item) {
-      this.apiClient.api().$delete(item.uuid);
+      return this.apiClient.api().$delete(item.uuid);
     },
   },
 };

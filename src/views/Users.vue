@@ -20,30 +20,28 @@
       <o-button @click.stop="showForm(null)">Add user</o-button>
     </div>
 
-    <o-table :data="data">
+    <o-table :data="data" paginated per-page="15">
       <o-table-column
         v-slot="props"
         field="firstName"
         label="First Name"
         sortable
-        >{{ props.row.firstName }}</o-table-column
       >
+        {{ props.row.firstName }}
+      </o-table-column>
 
       <o-table-column
         v-slot="props"
         field="lastName"
         label="Last Name"
         sortable
-        >{{ props.row.lastName }}</o-table-column
       >
+        {{ props.row.lastName }}
+      </o-table-column>
 
-      <o-table-column
-        v-slot="props"
-        field="group.name"
-        label="Group"
-        sortable
-        >{{ props.row.group.name }}</o-table-column
-      >
+      <o-table-column v-slot="props" field="group.name" label="Group" sortable>
+        {{ props.row.group.name }}
+      </o-table-column>
 
       <o-table-column v-slot="props" field="birthDate" label="Date" sortable>
         {{ props.row.birthDate }}
@@ -106,7 +104,7 @@ export default {
       return User.query().withAll().all();
     },
   },
-  created() {
+  mounted() {
     this.getItems();
   },
   methods: {

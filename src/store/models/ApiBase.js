@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle */
-import { Model } from '@vuex-orm/core';
+import { Model } from "@vuex-orm/core";
 
 export default class ApiBase extends Model {
   static apiConfig = {

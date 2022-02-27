@@ -21,7 +21,7 @@
         field="user.fullName"
         label="User"
         sortable
-        >{{ props.row.user.fullName }}</o-table-column
+        >{{ props.row.user?.fullName }}</o-table-column
       >
 
       <o-table-column v-slot="props" field="type" label="Type" sortable>
@@ -57,7 +57,7 @@
 
 <script>
 import apiClientMixin from "../mixins/apiClientMixin";
-import { Transaction } from "../store/models";
+import { Transaction, User } from "../store/models";
 import TransactionForm from "../components/forms/TransactionForm.vue";
 export default {
   name: "TransactionView",
@@ -82,6 +82,7 @@ export default {
   },
   created() {
     this.getItems();
+    User.api().$fetch();
   },
   methods: {
     showForm(transaction) {

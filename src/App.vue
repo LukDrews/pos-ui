@@ -7,9 +7,6 @@
 
 <script setup>
 import Navigation from "./views/Navigation.vue";
-import { User } from "./store/models";
-
-User.api().$fetch();
 </script>
 
 <style>
