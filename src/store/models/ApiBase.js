@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import { Model } from "@vuex-orm/core";
 
 export default class ApiBase extends Model {

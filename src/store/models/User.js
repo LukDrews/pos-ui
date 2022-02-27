@@ -32,7 +32,7 @@ export default class User extends ApiBase {
       orders: this.hasMany(Order, "userUuid"),
       transactions: this.hasMany(Transaction, "userUuid"),
       balance: this.number(null),
-      imageUrl: this.attr(null),
+      imagePath: this.attr(null),
     };
   }
 
@@ -42,6 +42,15 @@ export default class User extends ApiBase {
 
   get balanceFormatted() {
     return formatters.toCurrencyFormat(this.balance);
+  }
+
+  get imageUrl() {
+    const defaultImageUrl = `/images/avatar.jpg`;
+    if (this.imagePath) {
+      return `${import.meta.env.VITE_API_URL}${this.imagePath}`;
+    } else {
+      return defaultImageUrl;
+    }
   }
 
   static apiConfig = {

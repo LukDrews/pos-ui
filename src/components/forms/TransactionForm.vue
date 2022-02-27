@@ -153,7 +153,7 @@ export default {
 </script>
 
 <style scoped>
->>> .o-tabs__content {
+:deep() .o-tabs__content {
   display: none;
 }
 </style>

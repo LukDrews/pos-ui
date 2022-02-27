@@ -5,6 +5,17 @@
         <h5>{{ title }}</h5>
       </div>
       <div>
+        <div class="flex flex-row items-center justify-evenly">
+          <img
+            class="h-32 aspect-square object-cover rounded-full border border-inherit drop-shadow"
+            :src="preview ? preview : user.imageUrl"
+          />
+          <o-upload v-model="image" accept="image/*">
+            <o-button tag="a" variant="primary" icon-left="image">
+              Select image
+            </o-button>
+          </o-upload>
+        </div>
         <o-field grouped label="Name">
           <o-input
             v-model="user.firstName"
@@ -92,6 +103,8 @@ export default {
 
       locale: "en-CA",
       date: null,
+      image: null,
+      preview: null,
 
       defaultImageUrl: `${
         import.meta.env.VITE_API_URL
@@ -121,6 +134,7 @@ export default {
         Group.api().$fetch();
         Role.api().$fetch();
 
+        this.image = null;
         if (this.selected) {
           this.user = new User(this.selected);
           this.date = new Date(this.selected.birthDate);
@@ -131,13 +145,26 @@ export default {
       }
     },
     date(val) {
-      const dateString = new Date(
-        val.getTime() - val.getTimezoneOffset() * 60000
-      )
-        .toISOString()
-        .split("T")[0];
+      if (val) {
+        const dateString = new Date(
+          val.getTime() - val.getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .split("T")[0];
 
-      this.user.birthDate = dateString;
+        this.user.birthDate = dateString;
+      }
+    },
+    image(val) {
+      if (val) {
+        try {
+          this.preview = URL.createObjectURL(val);
+        } catch (err) {
+          this.preview = null;
+        }
+      } else {
+        this.preview = null;
+      }
     },
   },
   methods: {
@@ -147,6 +174,8 @@ export default {
     },
     onConfirm() {
       this.user.uuid = this.selected?.uuid;
+      this.user.image = this.image;
+      URL.revokeObjectURL(this.image);
       this.$emit("update:active", false);
       this.$emit("on-confirm", this.user);
     },

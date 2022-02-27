@@ -21,6 +21,13 @@
     </div>
 
     <o-table :data="data" paginated per-page="15">
+      <o-table-column v-slot="props" width="56">
+        <img
+          class="w-8 aspect-square rounded-full border border-inherit"
+          :src="props.row.imageUrl"
+        />
+      </o-table-column>
+
       <o-table-column
         v-slot="props"
         field="firstName"
@@ -119,3 +126,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+:deep() .o-table__td {
+  vertical-align: middle;
+}
+</style>
