@@ -29,6 +29,7 @@ export default class User extends ApiBase {
       role: this.belongsTo(Role, "roleUuid"),
       groupUuid: this.attr(null),
       group: this.belongsTo(Group, "groupUuid"),
+      barcode: this.attr(null),
       orders: this.hasMany(Order, "userUuid"),
       transactions: this.hasMany(Transaction, "userUuid"),
       balance: this.number(null),
@@ -37,11 +38,19 @@ export default class User extends ApiBase {
   }
 
   get fullName() {
-    return `${this.firstName} ${this.lastName}`;
+    if (!!this.firstName && !!this.lastName) {
+      return `${this.firstName} ${this.lastName}`;
+    } else if (!!this.firstName) {
+      return this.firstName;
+    } else if (!!this.lastName) {
+      return this.lastName;
+    } else {
+      return "";
+    }
   }
 
   get balanceFormatted() {
-    return formatters.toCurrencyFormat(this.balance);
+    return formatters.toCurrencyFormat(this.balance || 0);
   }
 
   get imageUrl() {

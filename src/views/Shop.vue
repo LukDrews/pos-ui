@@ -44,17 +44,44 @@
                 icon-right-clickable
                 @icon-click="decrementCount(props.row)"
                 @icon-right-click="incrementCount(props.row)"
-              >
-              </o-input>
+              ></o-input>
             </o-field>
           </o-table-column>
         </o-table>
       </div>
-      <div class="w-1/4 p-4 h-full bg-white rounded">
-        <h3 class="text-center font-semibold">User</h3>
-        <br />
-        <div>Name: {{ user.fullName }}</div>
-        <div>Data: {{ user }}</div>
+      <div
+        class="w-1/4 p-4 h-full bg-white rounded flex flex-col justify-between"
+      >
+        <div>
+          <h2 class="text-center font-semibold">User</h2>
+          <br />
+          <div class="pb-4 flex flex-row justify-center">
+            <img
+              class="h-32 aspect-square object-cover rounded-full border border-inherit drop-shadow"
+              :src="user.imageUrl"
+            />
+          </div>
+          <ul class="">
+            <li
+              v-for="item in userData"
+              :key="item.label"
+              class="flex flex-row justify-between pb-2"
+            >
+              <span> {{ item.label }} </span>
+              <span>{{ item.value }}</span>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <o-button
+            expanded
+            variant="success"
+            :disabled="disablePayment"
+            @click="createOrder"
+          >
+            Pay
+          </o-button>
+        </div>
       </div>
     </div>
   </section>
@@ -64,7 +91,7 @@
 import apiClientMixin from "../mixins/apiClientMixin";
 
 import { barcode as validator } from "../utils/validators";
-import { CartItem, User } from "../store/models";
+import { CartItem, User, Group, Order } from "../store/models";
 import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
 
 export default {
@@ -78,8 +105,7 @@ export default {
       apiClient: CartItem,
 
       barcode: "",
-
-      user: new User(),
+      userBarcode: "",
 
       selected: null,
       confirmDialog: false,
@@ -89,10 +115,29 @@ export default {
     data() {
       return CartItem.query().withAll().all();
     },
+    userData() {
+      return [
+        { label: "Name:", value: this.user?.fullName || "-" },
+        { label: "Birthdate:", value: this.user?.birthDate || "-" },
+        { label: "Goup:", value: this.user?.group?.name || "-" },
+        { label: "Balance:", value: this.user?.balanceFormatted },
+      ];
+    },
+    disablePayment() {
+      return this.user.uuid === null || this.data.length === 0;
+    },
+    user() {
+      const currUser =
+        User.query().with("group").where("barcode", this.userBarcode).first() ??
+        new User();
+      return currUser;
+    },
   },
-  created() {
+  async created() {
     window.addEventListener("keypress", this.processKey);
     this.getItems();
+    User.api().$fetch();
+    Group.api().$fetch();
   },
   unmounted() {
     window.removeEventListener("keypress", this.processKey);
@@ -109,11 +154,7 @@ export default {
         e.key === "Enter" &&
         validator.isValidFormat(this.barcode, validator.formats.ean8)
       ) {
-        User.api()
-          .$getByBarcode(this.barcode)
-          .then((res) => {
-            this.user = User.find(res.response.data.uuid);
-          });
+        this.userBarcode = this.barcode;
         this.barcode = "";
       } else if (e.key >= "0" && e.key <= "9") {
         this.barcode += e.key;
@@ -133,6 +174,16 @@ export default {
       const newItem = new CartItem(cartItem);
       newItem.count += 1;
       this.updateItem(newItem);
+    },
+    createOrder() {
+      if (this.user.uuid) {
+        Order.api()
+          .$create({ userUuid: this.user.uuid })
+          .then(() => {
+            CartItem.deleteAll();
+            this.userBarcode = "";
+          });
+      }
     },
     showConfirmDialog(item) {
       this.confirmDialog = true;
