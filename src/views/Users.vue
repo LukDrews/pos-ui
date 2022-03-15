@@ -108,8 +108,9 @@ export default {
     },
   },
   mounted() {
-    this.getItems();
-    Group.api().$fetch();
+    Group.api()
+      .$fetch()
+      .then(() => this.getItems());
   },
   methods: {
     showForm(selected) {
