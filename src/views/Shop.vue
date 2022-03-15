@@ -7,10 +7,6 @@
 
     <div class="flex h-full flex-row gap-x-4">
       <div class="w-3/4 p-4 h-full bg-white rounded">
-        <div class="pb-4">
-          <h3>Cart</h3>
-        </div>
-
         <o-table :data="data">
           <o-table-column
             v-slot="props"
@@ -53,8 +49,6 @@
         class="w-1/4 p-4 h-full bg-white rounded flex flex-col justify-between"
       >
         <div>
-          <h2 class="text-center font-semibold">User</h2>
-          <br />
           <div class="pb-4 flex flex-row justify-center">
             <img
               class="h-32 aspect-square object-cover rounded-full border border-inherit drop-shadow"

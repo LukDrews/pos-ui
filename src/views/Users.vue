@@ -12,12 +12,8 @@
     />
 
     <div class="flex justify-between items-center pb-4">
-      <h3>Users</h3>
-      <o-button icon-right="redo" @click="getItems()" />
-    </div>
-
-    <div class="pb-4">
       <o-button @click.stop="showForm(null)">Add user</o-button>
+      <o-button icon-right="redo" @click="getItems()" />
     </div>
 
     <o-table :data="data" paginated per-page="15">
@@ -86,7 +82,7 @@
 <script>
 import apiClientMixin from "../mixins/apiClientMixin";
 
-import { User } from "../store/models";
+import { User, Group } from "../store/models";
 import UserForm from "../components/forms/UserForm.vue";
 import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
 
@@ -113,6 +109,7 @@ export default {
   },
   mounted() {
     this.getItems();
+    Group.api().$fetch();
   },
   methods: {
     showForm(selected) {
