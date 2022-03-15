@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { Transaction, User } from "../../store/models";
+import { Transaction, User, Group } from "../../store/models";
 
 function initialState() {
   return {
@@ -121,12 +121,12 @@ export default {
         this.resetComponent();
         Transaction.api().$fetch();
         User.api().$fetch();
+        Group.api().$fetch();
       }
     },
   },
   methods: {
     userFormatter(user) {
-      console.log(user);
       if (user.group) {
         return `${user.fullName} - ${user.group.name}`;
       }
@@ -144,7 +144,6 @@ export default {
       transaction.userUuid = this.selectedUser?.uuid;
       transaction.amount =
         this.transactionType === "deposit" ? this.amount : -this.amount;
-      console.log(transaction);
       this.isActive = false;
       this.$emit("on-confirm", transaction);
     },
