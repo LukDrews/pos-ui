@@ -41,13 +41,32 @@
       </div>
     </o-sidebar>
   </div>
+  <o-modal v-model:active="isActive" scroll="clip">
+    <div>Search</div>
+    <o-field label="Find a JS framework">
+      <o-autocomplete
+        v-model="searchQuery"
+        rounded
+        expanded
+        :data="filteredUserProducts"
+        placeholder="e.g. Snickers, John, ..."
+        icon="search"
+        clearable
+        @select="(option) => (selected = option)"
+      >
+        <template #empty>No results found</template>
+      </o-autocomplete>
+    </o-field>
+  </o-modal>
 </template>
 
 <script>
 /**
  * @see: https://codepen.io/robstinson/pen/bGwpNMV
  */
+import { U } from "../../dist/assets/index.18925454";
 import NavigationItem from "../components/NavigationItem.vue";
+import { User, Product } from "../store/models";
 export default {
   name: "NavigationBar",
   components: {
@@ -70,7 +89,36 @@ export default {
       },
       { title: "Roles", icon: "user-lock", path: "/roles" },
     ],
+
+    isActive: false,
+    searchQuery: "",
   }),
+  computed: {
+    filteredUserProducts() {
+      const users = User.all();
+      return users.filter((current) => {
+        return (
+          current.fullName
+            .toLowerCase()
+            .indexOf(this.searchQuery.toLowerCase()) >= 0
+        );
+      });
+    },
+  },
+  created() {
+    window.addEventListener("keydown", this.processKey);
+  },
+  unmounted() {
+    window.removeEventListener("keydown", this.processKey);
+  },
+  methods: {
+    processKey(e) {
+      if (e.key === "k" && e.ctrlKey) {
+        e.preventDefault();
+        this.isActive = !this.isActive;
+      }
+    },
+  },
 };
 </script>
 
