@@ -70,9 +70,6 @@ export default {
       return Role.query().withAll().all();
     },
   },
-  created() {
-    this.getItems();
-  },
   methods: {
     deleteItem(selected) {
       Role.api()

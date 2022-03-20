@@ -127,14 +127,11 @@ export default {
       return currUser;
     },
   },
-  async created() {
-    window.addEventListener("keypress", this.processKey);
-    this.getItems();
-    User.api().$fetch();
-    Group.api().$fetch();
+  created() {
+    window.addEventListener("keydown", this.processKey);
   },
   unmounted() {
-    window.removeEventListener("keypress", this.processKey);
+    window.removeEventListener("keydown", this.processKey);
   },
   methods: {
     processKey(e) {

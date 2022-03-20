@@ -107,11 +107,6 @@ export default {
       return User.query().withAll().all();
     },
   },
-  mounted() {
-    Group.api()
-      .$fetch()
-      .then(() => this.getItems());
-  },
   methods: {
     showForm(selected) {
       this.inputForm = true;

@@ -18,37 +18,18 @@ import Vuex from "vuex";
 import VuexORM from "@vuex-orm/core";
 import VuexORMAxios from "@vuex-orm/plugin-axios";
 import axios from "axios";
-import {
-  User,
-  Role,
-  Group,
-  Product,
-  Order,
-  OrderItem,
-  CartItem,
-  Transaction,
-} from "./store/models";
+import * as Models from "./store/models";
+// Create a new instance of Database.
+const database = new VuexORM.Database();
+Object.values(Models).forEach((model) => database.register(model));
+// Create Vuex Store and register database through Vuex ORM.
+const store = new Vuex.createStore({
+  plugins: [VuexORM.install(database)],
+});
 
 VuexORM.use(VuexORMAxios, {
   axios,
   baseURL: `${import.meta.env.VITE_API_URL}/v1/`,
-});
-// Create a new instance of Database.
-const database = new VuexORM.Database();
-
-// Register Models to Database.
-database.register(User);
-database.register(Role);
-database.register(Group);
-database.register(Product);
-database.register(Order);
-database.register(OrderItem);
-database.register(CartItem);
-database.register(Transaction);
-
-// Create Vuex Store and register database through Vuex ORM.
-const store = new Vuex.createStore({
-  plugins: [VuexORM.install(database)],
 });
 
 const app = createApp(App);
@@ -69,4 +50,8 @@ app.use(Oruga, {
     contentClass: "modal-content",
   },
 });
+
+for (const model of Object.values(Models)) {
+  await model.api().$fetch?.();
+}
 app.mount("#app");

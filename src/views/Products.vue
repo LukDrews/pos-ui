@@ -85,9 +85,6 @@ export default {
       return Product.query().withAll().all();
     },
   },
-  created() {
-    this.getItems();
-  },
   methods: {
     showForm(product) {
       this.inputForm = true;

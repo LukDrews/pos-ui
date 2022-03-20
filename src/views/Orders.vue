@@ -11,6 +11,7 @@
     </div>
 
     <o-table :data="data">
+      <template #empty>No results found</template>
       <o-table-column
         v-slot="props"
         field="user.fullName"
@@ -79,9 +80,6 @@ export default {
     data() {
       return Order.query().withAll().all();
     },
-  },
-  created() {
-    this.getItems();
   },
   methods: {
     showForm(order) {

@@ -80,10 +80,6 @@ export default {
       return d;
     },
   },
-  created() {
-    this.getItems();
-    User.api().$fetch();
-  },
   methods: {
     showForm(transaction) {
       this.inputForm = true;
