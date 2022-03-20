@@ -1,5 +1,5 @@
 <template>
-  <section class="container h-full mx-auto bg-gray-200">
+  <section class="container h-full mx-auto">
     <ConfirmDialog
       v-model:active="confirmDialog"
       @on-confirm="deleteItem(selected)"

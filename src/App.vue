@@ -1,13 +1,8 @@
 <template>
-  <Navigation />
-  <div id="content" class="grow my-12 p-4">
-    <router-view></router-view>
-  </div>
+  <router-view></router-view>
 </template>
 
-<script setup>
-import Navigation from "./views/Navigation.vue";
-</script>
+<script setup></script>
 
 <style>
 #app {
@@ -15,6 +10,5 @@ import Navigation from "./views/Navigation.vue";
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  @apply bg-gray-200;
 }
 </style>
