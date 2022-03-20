@@ -26,7 +26,7 @@ export default {
       default: false,
     },
     selected: {
-      type: Object,
+      type: String,
       default: null,
     },
   },
@@ -42,7 +42,7 @@ export default {
       return this.reduce ? this.reduceClass : this.notReduceClass;
     },
     isActive() {
-      return this.selected === this.item ? this.activeClass : "";
+      return this.selected === this.item.path ? this.activeClass : "";
     },
   },
 };

@@ -33,8 +33,7 @@
               :key="item.title"
               :reduce="reduce"
               :item="item"
-              :selected="selected"
-              @click="selected = item"
+              :selected="$route.path"
             ></NavigationItem>
           </ul>
         </div>
@@ -52,7 +51,7 @@
         placeholder="e.g. Snickers, John, ..."
         icon="search"
         clearable
-        @select="(option) => (selected = option)"
+        @select="(option) => (searchSelect = option)"
       >
         <template #empty>No results found</template>
       </o-autocomplete>
@@ -73,7 +72,6 @@ export default {
   },
   data: () => ({
     reduce: false,
-    selected: null,
     items: [
       // { title: "Home", icon: "home", path: "/" },
       { title: "Shop", icon: "store", path: "/shop" },
@@ -91,6 +89,7 @@ export default {
 
     isActive: false,
     searchQuery: "",
+    searchSelect: null,
   }),
   computed: {
     filteredUserProducts() {
