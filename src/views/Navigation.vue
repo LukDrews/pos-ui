@@ -64,7 +64,6 @@
 /**
  * @see: https://codepen.io/robstinson/pen/bGwpNMV
  */
-import { U } from "../../dist/assets/index.18925454";
 import NavigationItem from "../components/NavigationItem.vue";
 import { User, Product } from "../store/models";
 export default {
