@@ -1,23 +1,40 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import AppLayout from "../layouts/AppLayout.vue";
+import store from "../store";
 
-// Vue.use(VueRouter);
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
 
 const routes = [
   {
     path: "/login",
-    name: "Login",
     // route level code-splitting
-    // this generates a separate chunk (shop.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import("../layouts/PublicLayout.vue"),
     children: [
       {
         path: "",
-        component: () =>
-          import(/* webpackChunkName: "shop" */ "../views/Login.vue"),
+        name: "Login",
+        component: () => import("../views/Auth.vue"),
       },
     ],
+  },
+  {
+    path: "/logout",
+    component: () => import("../layouts/PublicLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "Logout",
+        component: () => import("../views/Auth.vue"),
+        props: { logout: true },
+      },
+    ],
+  },
+  {
+    path: "/loading",
+    name: "Preload",
+    component: () => import("../views/Preload.vue"),
+    props: (route) => ({ redirect: route.query.redirect }),
   },
   {
     path: "/",
@@ -68,6 +85,23 @@ const router = createRouter({
   history: createWebHashHistory(),
   // base: import.meta.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (!store.state.authenticated && to.name !== "Login") {
+    console.log("Redirect to login");
+    return next({ name: "Login" });
+  }
+
+  if (
+    store.state.authenticated &&
+    !store.state.loaded &&
+    to.name !== "Preload"
+  ) {
+    return next({ name: "Preload", query: { redirect: to.name } });
+  }
+
+  return next();
 });
 
 export default router;

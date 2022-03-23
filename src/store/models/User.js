@@ -56,7 +56,7 @@ export default class User extends ApiBase {
   get imageUrl() {
     const defaultImageUrl = `/images/avatar.jpg`;
     if (this.imagePath) {
-      return `${import.meta.env.VITE_API_URL}${this.imagePath}`;
+      return `${User.store().state.baseUrl}${this.imagePath}`;
     } else {
       return defaultImageUrl;
     }

@@ -1,5 +1,8 @@
 import { Model } from "@vuex-orm/core";
 
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+
 export default class ApiBase extends Model {
   static apiConfig = {
     url: this.baseUrl, // pass url to fetch, get, create ...

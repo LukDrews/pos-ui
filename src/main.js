@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
+import store from "./store";
 
 // Oruga Framework + TailwindCSS
 import Oruga from "@oruga-ui/oruga-next";
@@ -13,27 +14,19 @@ import "@oruga-ui/oruga-next/dist/oruga-full.css";
 import "./assets/oruga-tailwindcss.css";
 
 library.add(freeSolidIcons);
-// Vuex Next + Vuex ORM + Vuex ORM Axios
-import Vuex from "vuex";
-import VuexORM from "@vuex-orm/core";
-import VuexORMAxios from "@vuex-orm/plugin-axios";
-import axios from "axios";
-import * as Models from "./store/models";
-// Create a new instance of Database.
-const database = new VuexORM.Database();
-Object.values(Models).forEach((model) => database.register(model));
-// Create Vuex Store and register database through Vuex ORM.
-const store = new Vuex.createStore({
-  plugins: [VuexORM.install(database)],
-});
 
-VuexORM.use(VuexORMAxios, {
-  axios,
-  baseURL: `${import.meta.env.VITE_API_URL}/v1/`,
-});
+// Attach axios to vue
+import VueAxios from "vue-axios";
+import axios from "axios";
 
 const app = createApp(App);
 app.component("VueFontawesome", FontAwesomeIcon);
+app.use(
+  VueAxios,
+  axios.create({
+    baseURL: store.state.apiUrl,
+  })
+);
 app.use(router);
 app.use(store);
 app.use(Oruga, {
@@ -51,7 +44,4 @@ app.use(Oruga, {
   },
 });
 
-for (const model of Object.values(Models)) {
-  await model.api().$fetch?.();
-}
 app.mount("#app");

@@ -106,9 +106,7 @@ export default {
       image: null,
       preview: null,
 
-      defaultImageUrl: `${
-        import.meta.env.VITE_API_URL
-      }/static/images/default/avatar.png`,
+      defaultImageUrl: `${this.$store.state.baseUrl}/static/images/default/avatar.png`,
     };
   },
   computed: {
