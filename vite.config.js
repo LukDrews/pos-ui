@@ -8,4 +8,5 @@ export default defineConfig({
     minify: "esbuild",
     target: "esnext",
   },
+  server: { port: 8080, strictPort: true },
 });
