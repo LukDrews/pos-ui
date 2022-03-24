@@ -2,11 +2,11 @@
   <router-link
     class="flex items-center h-12 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
     :class="[isReduced, isActive]"
-    :to="item.path"
+    :to="path"
   >
-    <o-icon class="w-6 h-6" :icon="item.icon"> </o-icon>
+    <o-icon class="w-6 h-6" :icon="icon"> </o-icon>
     <span v-if="!reduce" class="ml-2 text-sm font-medium">
-      {{ item.title }}
+      {{ title }}
     </span>
   </router-link>
 </template>
@@ -15,11 +15,17 @@
 export default {
   name: "NavigationItem",
   props: {
-    item: {
-      type: Object,
-      default: () => {
-        return { title: "", icon: "", path: "" };
-      },
+    title: {
+      type: String,
+      default: "",
+    },
+    icon: {
+      type: String,
+      default: "",
+    },
+    path: {
+      type: String,
+      default: "",
     },
     reduce: {
       type: Boolean,
@@ -42,7 +48,7 @@ export default {
       return this.reduce ? this.reduceClass : this.notReduceClass;
     },
     isActive() {
-      return this.selected === this.item.path ? this.activeClass : "";
+      return this.selected === this.path ? this.activeClass : "";
     },
   },
 };

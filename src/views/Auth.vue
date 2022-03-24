@@ -4,7 +4,7 @@
   >
     <div class="px-8 py-6 bg-white shadow-lg">
       <h3 class="text-2xl font-bold text-center">Login</h3>
-      <form action>
+      <form @keyup.enter.native="signin">
         <div class="mt-4">
           <o-field label="Username" :variant="error ? 'danger' : ''">
             <o-input v-model="username" placeholder="Username"></o-input>
@@ -21,10 +21,11 @@
               placeholder="Password"
               type="password"
             ></o-input>
+            <!-- <o-input type="submit"></o-input> -->
           </o-field>
         </div>
         <div class="py-2 mt-4">
-          <o-button @click="signin"> Sign in </o-button>
+          <o-button type="submit" @click="signin"> Sign in </o-button>
         </div>
       </form>
     </div>
