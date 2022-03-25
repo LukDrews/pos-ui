@@ -4,7 +4,7 @@
   >
     <div class="px-8 py-6 bg-white shadow-lg">
       <h3 class="text-2xl font-bold text-center">Login</h3>
-      <form @keyup.enter.native="signin">
+      <form @keyup.enter="signin">
         <div class="mt-4">
           <o-field label="Username" :variant="error ? 'danger' : ''">
             <o-input v-model="username" placeholder="Username"></o-input>

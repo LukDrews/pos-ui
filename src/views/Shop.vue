@@ -39,11 +39,15 @@
                 numeric
                 group
                 expanded
-                icon="minus"
+                :icon="props.row.count === 1 ? 'trash' : 'minus'"
                 icon-clickable
                 icon-right="plus"
                 icon-right-clickable
-                @icon-click="decrementCount(props.row)"
+                @icon-click="
+                  props.row.count === 1
+                    ? deleteItem(props.row)
+                    : decrementCount(props.row)
+                "
                 @icon-right-click="incrementCount(props.row)"
               ></o-input>
             </o-field>
