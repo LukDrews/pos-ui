@@ -12,15 +12,14 @@
     />
 
     <div class="flex justify-between items-center pb-4">
-      <h3>Products</h3>
+      <o-button @click.stop="showForm(null)">Add product</o-button>
       <o-button icon-right="redo" @click="getItems()" />
     </div>
 
-    <div class="pb-4">
-      <o-button @click.stop="showForm(null)">Add product</o-button>
-    </div>
-
     <o-table :data="data">
+      <template #empty>
+        <div class="m-4 text-center">No products found</div>
+      </template>
       <o-table-column v-slot="props" field="name" label="Name" sortable>
         {{ props.row.name }}
       </o-table-column>

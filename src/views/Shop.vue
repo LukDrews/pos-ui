@@ -8,6 +8,11 @@
     <div class="flex h-full flex-row gap-x-4">
       <div class="w-3/4 p-4 h-full bg-white rounded">
         <o-table :data="data">
+          <template #empty>
+            <div class="m-4 text-center">
+              No items found. Please scan an item.
+            </div>
+          </template>
           <o-table-column
             v-slot="props"
             field="product.name"
@@ -113,7 +118,7 @@ export default {
       return [
         { label: "Name:", value: this.user?.fullName || "-" },
         { label: "Birthdate:", value: this.user?.birthDate || "-" },
-        { label: "Goup:", value: this.user?.group?.name || "-" },
+        { label: "Group:", value: this.user?.group?.name || "-" },
         { label: "Balance:", value: this.user?.balanceFormatted },
       ];
     },

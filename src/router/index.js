@@ -98,7 +98,7 @@ router.beforeEach((to, from, next) => {
     !store.state.loaded &&
     to.name !== "Preload"
   ) {
-    return next({ name: "Preload", query: { redirect: to.name } });
+    return next({ name: "Preload", query: { redirect: to.path } });
   }
 
   return next();

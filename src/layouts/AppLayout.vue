@@ -19,4 +19,8 @@ export default {
 #content {
   @apply bg-gray-200;
 }
+
+#content section {
+  min-height: 250px;
+}
 </style>

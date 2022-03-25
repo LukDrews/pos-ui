@@ -17,6 +17,9 @@
     </div>
 
     <o-table :data="data" paginated per-page="15">
+      <template #empty>
+        <div class="m-4 text-center">No users found</div>
+      </template>
       <o-table-column v-slot="props" width="56">
         <img
           class="w-8 aspect-square rounded-full border border-inherit"

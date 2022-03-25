@@ -5,13 +5,14 @@
       @on-confirm="deleteItem(selected)"
     />
 
-    <div class="flex justify-between items-center pb-4">
-      <h3>Orders</h3>
+    <div class="flex justify-end items-center pb-4">
       <o-button icon-right="redo" @click="getItems()" />
     </div>
 
     <o-table :data="data">
-      <template #empty>No results found</template>
+      <template #empty>
+        <div class="m-4 text-center">No orders found</div>
+      </template>
       <o-table-column
         v-slot="props"
         field="user.fullName"
