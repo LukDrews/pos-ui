@@ -72,11 +72,11 @@ const routes = [
         name: "Transaction",
         component: () => import("../views/Transactions.vue"),
       },
-      {
-        path: "/roles",
-        name: "Roles",
-        component: () => import("../views/Roles.vue"),
-      },
+      // {
+      //   path: "/roles",
+      //   name: "Roles",
+      //   component: () => import("../views/Roles.vue"),
+      // },
     ],
   },
 ];

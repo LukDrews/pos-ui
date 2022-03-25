@@ -22,11 +22,15 @@ export default {
     };
   },
   async created() {
-    for (const model of Object.values(Models)) {
-      await model.api().$fetch?.();
+    try {
+      for (const model of Object.values(Models)) {
+        await model.api().$fetch?.();
+      }
+      await this.hasLoaded();
+      this.$router.push(this.redirect);
+    } catch (error) {
+      console.log("Can't access API");
     }
-    await this.hasLoaded();
-    this.$router.push(this.redirect);
   },
   methods: {
     ...mapActions(["hasLoaded"]),

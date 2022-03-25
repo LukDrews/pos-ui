@@ -93,7 +93,7 @@ export default {
         icon: "credit-card",
         path: "/transactions",
       },
-      { title: "Roles", icon: "user-lock", path: "/roles" },
+      // { title: "Roles", icon: "user-lock", path: "/roles" },
     ],
 
     isActive: false,
