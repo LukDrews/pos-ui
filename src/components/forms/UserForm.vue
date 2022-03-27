@@ -40,6 +40,14 @@
           ></o-datepicker>
         </o-field>
 
+        <o-field grouped label="Barcode">
+          <o-field>
+            <o-switch v-model="user.generateBarcode" :disabled="user.barcode">
+              <p v-if="user.barcode">User already has a barcode</p>
+            </o-switch>
+          </o-field>
+        </o-field>
+
         <o-field label="Group">
           <o-select v-model="user.groupUuid" placeholder="Select a group">
             <option
@@ -70,7 +78,6 @@
 
 <script>
 import { Group, Role, User } from "../../store/models";
-// import { barcode as validator } from '../../utils/validators';
 
 export default {
   name: "AddUserForm",
@@ -138,6 +145,7 @@ export default {
           this.date = new Date(this.selected.birthDate);
         } else {
           this.user = new User();
+          this.user.generateBarcode = true;
           this.date = null;
         }
       }
@@ -171,6 +179,7 @@ export default {
       this.$emit("on-cancel");
     },
     onConfirm() {
+      delete this.user.barcode;
       this.user.uuid = this.selected?.uuid;
       this.user.image = this.image;
       URL.revokeObjectURL(this.image);

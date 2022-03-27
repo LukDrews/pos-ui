@@ -11,36 +11,47 @@ const formats = {
   ean18: { validChars: /^\d{18}$/, validLength: 18 },
 };
 
-function calculateChecksum(barcode) {
-  const arr = barcode
-    .substring(0, barcode.length - 1)
-    .split('')
-    .reverse();
-
-  const sum = arr
+function sumArray(array) {
+  return array
     .map((d, i) => (i % 2 === 0 ? Number(d) * 3 : Number(d)))
     .reduce((acc, d) => acc + d);
+}
+function createChecksum(sum) {
+  return (10 - (sum % 10)) % 10;
+}
 
-  const checkSum = (10 - (sum % 10)) % 10;
-  return checkSum;
+function getChecksum(barcode) {
+  const arr = barcode
+    .substring(0, barcode.length - 1)
+    .split("")
+    .reverse();
+
+  const sum = sumArray(arr);
+
+  const checksum = createChecksum(sum);
+  return checksum;
 }
 
 function validateFormat(barcode, format) {
   if (!barcode) {
     return false;
   }
-  return barcode.length === format.validLength && format.validChars.test(barcode);
+  return (
+    barcode.length === format.validLength && format.validChars.test(barcode)
+  );
 }
 
 function validateBarcode(barcode) {
   const lastDigit = Number(barcode.substring(barcode.length - 1));
-  const checkSum = calculateChecksum(barcode);
+  const checkSum = getChecksum(barcode);
   return checkSum === lastDigit;
 }
 
 function validate(barcode) {
   // check if format is found
-  const format = Object.keys(formats).find((f) => validateFormat(barcode, formats[f]));
+  const format = Object.keys(formats).find((f) =>
+    validateFormat(barcode, formats[f])
+  );
 
   return {
     format,

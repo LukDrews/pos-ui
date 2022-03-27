@@ -62,6 +62,10 @@
         {{ props.row.balanceFormatted }}
       </o-table-column>
 
+      <o-table-column v-slot="props" field="barcode" label="Barcode" sortable>
+        {{ props.row.barcode }}
+      </o-table-column>
+
       <o-table-column v-slot="props" width="80">
         <div class="float-right">
           <o-icon
