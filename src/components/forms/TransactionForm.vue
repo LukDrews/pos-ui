@@ -34,12 +34,7 @@
           </o-tabs>
         </o-field>
         <o-field grouped label="Amount">
-          <o-input
-            v-model.number="amount"
-            placeholder="Amount"
-            type="number"
-            expanded
-          ></o-input>
+          <CurrencyInput v-model="amount" />
         </o-field>
       </div>
       <div class="flex flex-row justify-end gap-x-2">
@@ -51,6 +46,7 @@
 </template>
 
 <script>
+import CurrencyInput from "../CurrencyInput.vue";
 import { Transaction, User, Group } from "../../store/models";
 
 function initialState() {
@@ -60,12 +56,13 @@ function initialState() {
     searchString: "",
     selectedUser: null,
 
-    amount: null,
+    amount: 0,
   };
 }
 
 export default {
   name: "AddTransactionForm",
+  components: { CurrencyInput },
   props: {
     title: {
       type: String,

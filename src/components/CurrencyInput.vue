@@ -4,7 +4,7 @@
 
 <script setup>
 import { useCurrencyInput } from "vue-currency-input";
-import { watch } from "vue";
+import { watch, onMounted } from "vue";
 
 const props = defineProps({
   modelValue: {
@@ -32,9 +32,7 @@ const { inputRef, setValue } = useCurrencyInput(options);
 watch(
   () => props.modelValue,
   (value) => {
-    if (value === null) {
-      setValue(0);
-    }
+    setValue(value ?? 0);
   }
 );
 </script>

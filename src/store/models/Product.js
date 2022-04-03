@@ -12,7 +12,7 @@ export default class Product extends ApiBase {
     return {
       uuid: this.string(null),
       name: this.attr(null),
-      price: this.number(null),
+      price: this.number(0),
       barcode: this.attr(null),
       orderItems: this.hasMany(OrderItem, "productUuid"),
     };

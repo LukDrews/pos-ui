@@ -18,12 +18,7 @@
         </o-field>
 
         <o-field grouped label="Price">
-          <o-input
-            v-model.number="product.price"
-            placeholder="Price"
-            type="number"
-            expanded
-          ></o-input>
+          <CurrencyInput v-model="product.price" />
         </o-field>
       </div>
       <div class="flex flex-row justify-end gap-x-2">
@@ -35,11 +30,14 @@
 </template>
 
 <script>
+import CurrencyInput from "../CurrencyInput.vue";
+
 import { Product } from "../../store/models";
 import { barcode as validator } from "../../utils/validators";
 
 export default {
   name: "AddProductForm",
+  components: { CurrencyInput },
   props: {
     title: {
       type: String,
