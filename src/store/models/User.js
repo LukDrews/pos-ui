@@ -67,6 +67,13 @@ export default class User extends ApiBase {
     url: "/users",
   };
 
+  static import(file){
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return this.api().post(`${this.apiConfig.url}/import`, formData);
+  }
+
   static $createRemote(user) {
     const formData = new FormData();
     Object.keys(user).forEach((key) => formData.append(key, user[key]));

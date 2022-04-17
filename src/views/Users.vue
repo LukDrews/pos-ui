@@ -13,7 +13,12 @@
 
     <div class="flex justify-between items-center pb-4">
       <o-button @click.stop="showForm(null)">Add user</o-button>
-      <o-button icon-right="redo" @click="getItems()" />
+      <div class="flex gap-2">
+        <o-upload v-model="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @input="importUsers">
+          <o-button tag="a" icon-left="plus">import</o-button>
+        </o-upload>
+        <o-button icon-right="redo" @click="getItems()" />
+      </div>
     </div>
 
     <o-table :data="data" paginated per-page="15">
@@ -46,7 +51,7 @@
       </o-table-column>
 
       <o-table-column v-slot="props" field="group.name" label="Group" sortable>
-        {{ props.row.group.name }}
+        {{ props.row.group?.name }}
       </o-table-column>
 
       <o-table-column v-slot="props" field="birthDate" label="Date" sortable>
@@ -107,6 +112,7 @@ export default {
       selected: null,
       inputForm: false,
       confirmDialog: false,
+      importFile: null,
     };
   },
   computed: {
@@ -123,6 +129,11 @@ export default {
       this.confirmDialog = true;
       this.selected = selected;
     },
+    importUsers() {
+      if(this.importFile){
+        User.import(this.importFile)
+      }
+    }
   },
 };
 </script>
