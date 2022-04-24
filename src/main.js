@@ -44,4 +44,4 @@ app.use(Oruga, {
   },
 });
 
-app.mount("#app");
+app.mount("#app").$nextTick(window.removeLoading);

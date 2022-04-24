@@ -54,7 +54,7 @@ export default class User extends ApiBase {
   }
 
   get imageUrl() {
-    const defaultImageUrl = `/images/avatar.jpg`;
+    const defaultImageUrl = `./images/avatar.jpg`;
     if (this.imagePath) {
       return `${User.store().state.baseUrl}${this.imagePath}`;
     } else {

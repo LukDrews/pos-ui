@@ -24,3 +24,5 @@ pnpm-debug.log*
 
 # dotenv environment variables file
 .env
+
+.env.production
