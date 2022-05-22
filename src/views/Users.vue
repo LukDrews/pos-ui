@@ -106,11 +106,15 @@ export default {
     },
     downloadBarcodes(){
       const users = User.query().all();
-      const header = ["barcode"]
-      let data = header.join(",") + "\n";
+      const headers = ["barcode", "firstName", "lastName"]
+      let data = headers.join(",") + "\n";
 
       for (const user of users) {
-        data += user.barcode + "\n";
+        let line = [];
+        for (const header of headers) {
+          line.push(user[header])
+        }
+        data += line.join(",") + "\n";
       }
       this.download("barcodes.csv", data)
 
