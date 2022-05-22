@@ -1,21 +1,15 @@
 <template>
   <section class="container mx-auto p-4 bg-white rounded">
-    <UserForm
-      v-model:active="inputForm"
-      title="Add user"
-      :selected="selected"
-      @on-confirm="addOrUpdateItem"
-    />
-    <ConfirmDialog
-      v-model:active="confirmDialog"
-      @on-confirm="deleteItem(selected)"
-    />
+    <UserForm v-model:active="inputForm" title="Add user" :selected="selected" @on-confirm="addOrUpdateItem" />
+    <ConfirmDialog v-model:active="confirmDialog" @on-confirm="deleteItem(selected)" />
 
     <div class="flex justify-between items-center pb-4">
       <o-button @click.stop="showForm(null)">Add user</o-button>
       <div class="flex gap-2">
+        <o-button @click="downloadBarcodes">Export</o-button>
         <o-upload v-model="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-          <o-button tag="a" :icon-left="this.importFile ? '' : 'plus'">{{ this.importFile?.name || "import" }}</o-button>
+          <o-button tag="a" :icon-left="this.importFile ? '' : 'plus'">{{ this.importFile?.name || "import" }}
+          </o-button>
         </o-upload>
         <o-button v-if="importFile" @click="importUsers">
           Apply
@@ -29,27 +23,14 @@
         <div class="m-4 text-center">No users found</div>
       </template>
       <o-table-column v-slot="props" width="56">
-        <img
-          class="w-8 aspect-square rounded-full border border-inherit"
-          :src="props.row.imageUrl"
-        />
+        <img class="w-8 aspect-square rounded-full border border-inherit" :src="props.row.imageUrl" />
       </o-table-column>
 
-      <o-table-column
-        v-slot="props"
-        field="firstName"
-        label="First Name"
-        sortable
-      >
+      <o-table-column v-slot="props" field="firstName" label="First Name" sortable>
         {{ props.row.firstName }}
       </o-table-column>
 
-      <o-table-column
-        v-slot="props"
-        field="lastName"
-        label="Last Name"
-        sortable
-      >
+      <o-table-column v-slot="props" field="lastName" label="Last Name" sortable>
         {{ props.row.lastName }}
       </o-table-column>
 
@@ -61,12 +42,7 @@
         {{ props.row.birthDate }}
       </o-table-column>
 
-      <o-table-column
-        v-slot="props"
-        field="balanceFormatted"
-        label="Balance"
-        sortable
-      >
+      <o-table-column v-slot="props" field="balanceFormatted" label="Balance" sortable>
         {{ props.row.balanceFormatted }}
       </o-table-column>
 
@@ -76,18 +52,8 @@
 
       <o-table-column v-slot="props" width="80">
         <div class="float-right">
-          <o-icon
-            clickable
-            class="w-6 h-6"
-            icon="edit"
-            @click.stop="showForm(props.row)"
-          />
-          <o-icon
-            clickable
-            class="w-6 h-6"
-            icon="trash"
-            @click.stop="showConfirmDialog(props.row)"
-          />
+          <o-icon clickable class="w-6 h-6" icon="edit" @click.stop="showForm(props.row)" />
+          <o-icon clickable class="w-6 h-6" icon="trash" @click.stop="showConfirmDialog(props.row)" />
         </div>
       </o-table-column>
     </o-table>
@@ -133,11 +99,33 @@ export default {
       this.selected = selected;
     },
     importUsers() {
-      console.log("import file detected.", this.importFile)
-      if(this.importFile){
+      if (this.importFile) {
         User.import(this.importFile)
         this.importFile = null;
       }
+    },
+    downloadBarcodes(){
+      const users = User.query().all();
+      const header = ["barcode"]
+      let data = header.join(",") + "\n";
+
+      for (const user of users) {
+        data += user.barcode + "\n";
+      }
+      this.download("barcodes.csv", data)
+
+    },
+    download(filename, text) {
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', filename);
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
     }
   },
 };
