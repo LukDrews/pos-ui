@@ -14,9 +14,12 @@
     <div class="flex justify-between items-center pb-4">
       <o-button @click.stop="showForm(null)">Add user</o-button>
       <div class="flex gap-2">
-        <o-upload v-model="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @input="importUsers">
-          <o-button tag="a" icon-left="plus">import</o-button>
+        <o-upload v-model="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+          <o-button tag="a" :icon-left="this.importFile ? '' : 'plus'">{{ this.importFile?.name || "import" }}</o-button>
         </o-upload>
+        <o-button v-if="importFile" @click="importUsers">
+          Apply
+        </o-button>
         <o-button icon-right="redo" @click="getItems()" />
       </div>
     </div>
@@ -130,8 +133,10 @@ export default {
       this.selected = selected;
     },
     importUsers() {
+      console.log("import file detected.", this.importFile)
       if(this.importFile){
         User.import(this.importFile)
+        this.importFile = null;
       }
     }
   },
