@@ -68,7 +68,7 @@
             <li
               v-for="item in userData"
               :key="item.label"
-              class="flex flex-row justify-between pb-2"
+              class="flex flex-row justify-between pb-2 last:pb-0"
             >
               <span> {{ item.label }} </span>
               <span>{{ item.value }}</span>
@@ -76,6 +76,10 @@
           </ul>
         </div>
         <div>
+          <div class="flex flex-row justify-between pb-2">
+            <span>Total:</span>
+            <span>{{ paymentTotal }}</span>
+          </div>
           <o-button
             expanded
             variant="success"
@@ -91,8 +95,10 @@
 </template>
 
 <script>
+import Dinero from "dinero.js";
 import apiClientMixin from "../mixins/apiClientMixin";
 
+import formatters from "../utils/formatters";
 import { barcode as validator } from "../utils/validators";
 import { CartItem, User, Group, Order } from "../store/models";
 import ConfirmDialog from "../components/dialogs/ConfirmDialog.vue";
@@ -135,6 +141,15 @@ export default {
         new User();
       return currUser;
     },
+    paymentTotal() {
+      let total = Dinero();
+      for (const item of this.data) {
+        const itemCost = Dinero({amount: item.product.price}).multiply(item.count)
+        total = total.add(itemCost)
+      }
+
+      return formatters.toCurrencyFormat(total.getAmount());
+    }
   },
   created() {
     window.addEventListener("keydown", this.processKey);
@@ -160,6 +175,7 @@ export default {
         this.barcode += e.key;
       } else if (e.key === "Enter") {
         this.barcode = "";
+        this.createOrder();
       }
     },
     addCartItem(barcode) {
