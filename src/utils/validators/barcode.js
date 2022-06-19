@@ -66,8 +66,26 @@ function isValidFormat(barcode, format) {
   return false;
 }
 
+function isUser(barcode) {
+  return isValidFormat(barcode, formats.ean8) && hasCustomerPrefix(barcode);
+}
+
+function isProduct(barcode) {
+  return isValidFormat(barcode, formats.ean13) || (!hasCustomerPrefix(barcode) && isValidFormat(this.barcode, formats.ean8));
+}
+
+/**
+ * helper functions
+ */
+const hasCustomerPrefix = (barcode) => {
+  const customerPrefix = "952";
+  return barcode.startsWith(customerPrefix);
+};
+
 export default {
   formats,
   validate,
   isValidFormat,
+  isUser,
+  isProduct
 };
