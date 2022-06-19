@@ -7,7 +7,7 @@
       <o-button @click.stop="showForm(null)">Add user</o-button>
       <div class="flex gap-2">
         <o-button @click="downloadBarcodes">Export</o-button>
-        <o-upload v-model="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        <o-upload v-model="importFile" accept=".csv">
           <o-button tag="a" :icon-left="this.importFile ? '' : 'plus'">{{ this.importFile?.name || "import" }}
           </o-button>
         </o-upload>
