@@ -86,6 +86,7 @@ export default {
       { title: "Shop", icon: "store", path: "/shop" },
       { title: "Products", icon: "tag", path: "/products" },
       { title: "Users", icon: "user", path: "/users" },
+      { title: "Groups", icon: "users", path: "/groups" },
       { title: "Orders", icon: "shopping-cart", path: "/orders" },
       // { title: "Statistics", icon: "chart-line", path: "/statistics" },
       {
