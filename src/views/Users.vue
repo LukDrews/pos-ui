@@ -106,7 +106,7 @@ export default {
     },
     downloadBarcodes(){
       const users = User.query().all();
-      const headers = ["barcode", "firstName", "lastName"]
+      const headers = ["barcode", "firstName", "lastName", "balance"]
       let data = headers.join(",") + "\n";
 
       for (const user of users) {
