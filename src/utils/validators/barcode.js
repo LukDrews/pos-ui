@@ -71,7 +71,7 @@ function isUser(barcode) {
 }
 
 function isProduct(barcode) {
-  return isValidFormat(barcode, formats.ean13) || (!hasCustomerPrefix(barcode) && isValidFormat(this.barcode, formats.ean8));
+  return isValidFormat(barcode, formats.ean13) || (!hasCustomerPrefix(barcode) && isValidFormat(barcode, formats.ean8));
 }
 
 /**
