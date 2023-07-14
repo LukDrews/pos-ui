@@ -49,6 +49,10 @@
             <span>Total:</span>
             <span>{{ paymentTotal }}</span>
           </div>
+          <div class="flex flex-row justify-between pb-2">
+            <span>Daily orders:</span>
+            <span>{{ orderAmount }}</span>
+          </div>
           <o-button expanded variant="success" :disabled="disablePayment" @click="createOrder">
             Pay
           </o-button>
@@ -79,6 +83,7 @@ export default {
 
       barcode: "",
       userBarcode: "",
+      orderAmount: 0,
 
       selected: null,
       confirmDialog: false,
@@ -127,7 +132,7 @@ export default {
       if (e.key === "Enter") {
         const tmpBarcode = this.barcode;
         this.barcode = ""; // Always reset on enter
-
+        console.log(validator.isProduct(tmpBarcode));
         if (validator.isProduct(tmpBarcode)) {
           this.addCartItem(tmpBarcode);
           return;
@@ -135,6 +140,7 @@ export default {
 
         if (validator.isUser(tmpBarcode)) {
           this.userBarcode = tmpBarcode;
+          this.dayOrder();
           return;
         }
 
@@ -158,6 +164,16 @@ export default {
       }
 
     },
+    dayOrder() {
+      let orders = Order.query().where("userUuid", this.user.uuid).all();
+      let amount = 0;
+      orders.forEach(order => {
+        if(new Date (order.createdAt).toDateString() === new Date().toDateString()) {
+          amount += order.amount;
+        }
+      });
+      this.orderAmount = amount/100;
+    },
     addCartItem(barcode) {
       this.addItem({ barcode });
     },
@@ -173,6 +189,7 @@ export default {
     },
     createOrder() {
       if (this.user.uuid) {
+        this.orderAmount = 0;
         Order.api()
           .$create({ userUuid: this.user.uuid })
           .then(() => {
