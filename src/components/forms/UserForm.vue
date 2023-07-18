@@ -179,6 +179,7 @@ export default {
       this.$emit("on-cancel");
     },
     onConfirm() {
+      this.user.generateBarcode = this.user.barcode == null;
       delete this.user.barcode;
       this.user.uuid = this.selected?.uuid;
       this.user.image = this.image;
