@@ -1,19 +1,26 @@
 <template>
   <section class="container mx-auto p-4 bg-white rounded">
-    <UserForm v-model:active="inputForm" title="Add user" :selected="selected" @on-confirm="addOrUpdateItem" />
-    <ConfirmDialog v-model:active="confirmDialog" @on-confirm="deleteItem(selected)" />
+    <UserForm
+      v-model:active="inputForm"
+      title="Add user"
+      :selected="selected"
+      @on-confirm="addOrUpdateItem"
+    />
+    <ConfirmDialog
+      v-model:active="confirmDialog"
+      @on-confirm="deleteItem(selected)"
+    />
 
     <div class="flex justify-between items-center pb-4">
       <o-button @click.stop="showForm(null)">Add user</o-button>
       <div class="flex gap-2">
         <o-button @click="downloadBarcodes">Export</o-button>
         <o-upload v-model="importFile" accept=".csv">
-          <o-button tag="a" :icon-left="this.importFile ? '' : 'plus'">{{ this.importFile?.name || "import" }}
+          <o-button tag="a" :icon-left="importFile ? '' : 'plus'"
+            >{{ importFile?.name || "import" }}
           </o-button>
         </o-upload>
-        <o-button v-if="importFile" @click="importUsers">
-          Apply
-        </o-button>
+        <o-button v-if="importFile" @click="importUsers"> Apply </o-button>
         <o-button icon-right="redo" @click="getItems()" />
       </div>
     </div>
@@ -23,14 +30,27 @@
         <div class="m-4 text-center">No users found</div>
       </template>
       <o-table-column v-slot="props" width="56">
-        <img class="w-8 aspect-square rounded-full border border-inherit" :src="props.row.imageUrl" />
+        <img
+          class="w-8 aspect-square rounded-full border border-inherit"
+          :src="props.row.imageUrl"
+        />
       </o-table-column>
 
-      <o-table-column v-slot="props" field="firstName" label="First Name" sortable>
+      <o-table-column
+        v-slot="props"
+        field="firstName"
+        label="First Name"
+        sortable
+      >
         {{ props.row.firstName }}
       </o-table-column>
 
-      <o-table-column v-slot="props" field="lastName" label="Last Name" sortable>
+      <o-table-column
+        v-slot="props"
+        field="lastName"
+        label="Last Name"
+        sortable
+      >
         {{ props.row.lastName }}
       </o-table-column>
 
@@ -42,7 +62,12 @@
         {{ props.row.birthDate }}
       </o-table-column>
 
-      <o-table-column v-slot="props" field="balanceFormatted" label="Balance" sortable>
+      <o-table-column
+        v-slot="props"
+        field="balanceFormatted"
+        label="Balance"
+        sortable
+      >
         {{ props.row.balanceFormatted }}
       </o-table-column>
 
@@ -52,8 +77,18 @@
 
       <o-table-column v-slot="props" width="80">
         <div class="float-right">
-          <o-icon clickable class="w-6 h-6" icon="edit" @click.stop="showForm(props.row)" />
-          <o-icon clickable class="w-6 h-6" icon="trash" @click.stop="showConfirmDialog(props.row)" />
+          <o-icon
+            clickable
+            class="w-6 h-6"
+            icon="edit"
+            @click.stop="showForm(props.row)"
+          />
+          <o-icon
+            clickable
+            class="w-6 h-6"
+            icon="trash"
+            @click.stop="showConfirmDialog(props.row)"
+          />
         </div>
       </o-table-column>
     </o-table>
@@ -100,37 +135,39 @@ export default {
     },
     importUsers() {
       if (this.importFile) {
-        User.import(this.importFile)
+        User.import(this.importFile);
         this.importFile = null;
       }
     },
-    downloadBarcodes(){
+    downloadBarcodes() {
       const users = User.query().all();
-      const headers = ["barcode", "firstName", "lastName", "balance"]
+      const headers = ["barcode", "firstName", "lastName", "balance"];
       let data = headers.join(",") + "\n";
 
       for (const user of users) {
         let line = [];
         for (const header of headers) {
-          line.push(user[header])
+          line.push(user[header]);
         }
         data += line.join(",") + "\n";
       }
-      this.download("barcodes.csv", data)
-
+      this.download("barcodes.csv", data);
     },
     download(filename, text) {
-      var element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-      element.setAttribute('download', filename);
+      var element = document.createElement("a");
+      element.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+      );
+      element.setAttribute("download", filename);
 
-      element.style.display = 'none';
+      element.style.display = "none";
       document.body.appendChild(element);
 
       element.click();
 
       document.body.removeChild(element);
-    }
+    },
   },
 };
 </script>
