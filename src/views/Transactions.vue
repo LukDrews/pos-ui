@@ -11,7 +11,7 @@
       <o-button icon-right="redo" @click="getItems()" />
     </div>
 
-    <o-table :data="data">
+    <o-table :data="data" paginated per-page="15">
       <template #empty>
         <div class="m-4 text-center">No transactions found</div>
       </template>
@@ -75,7 +75,12 @@ export default {
   },
   computed: {
     data() {
-      const d = Transaction.query().withAll().all();
+      const d = Transaction.query()
+        .withAll()
+        .all()
+        .sort(function (a, b) {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
       return d;
     },
   },
