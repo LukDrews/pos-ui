@@ -9,7 +9,7 @@
       <o-button icon-right="redo" @click="getItems()" />
     </div>
 
-    <o-table :data="data">
+    <o-table :data="data" paginated per-page="15">
       <template #empty>
         <div class="m-4 text-center">No orders found</div>
       </template>

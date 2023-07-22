@@ -40,7 +40,7 @@
         {{ props.row.createdAt }}
       </o-table-column>
 
-      <o-table-column v-slot="props" width="80">
+      <!-- <o-table-column v-slot="props" width="80">
         <div v-if="props.row.order" class="float-right">
           <o-icon
             clickable
@@ -49,7 +49,7 @@
             @click.stop="showForm(props.row)"
           />
         </div>
-      </o-table-column>
+      </o-table-column> -->
     </o-table>
   </section>
 </template>
