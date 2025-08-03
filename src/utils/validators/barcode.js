@@ -78,7 +78,7 @@ function isProduct(barcode) {
  * helper functions
  */
 const hasCustomerPrefix = (barcode) => {
-  const customerPrefix = "952";
+  const customerPrefix = "957";
   return barcode.startsWith(customerPrefix);
 };
 

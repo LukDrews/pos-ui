@@ -179,7 +179,7 @@ export default {
     window.removeEventListener("keydown", this.processKey);
   },
   methods: {
-    processKey(e) {
+    async processKey(e) {
       console.log(e.key);
       if (e.key === "Enter") {
         const tmpBarcode = this.barcode;
@@ -190,17 +190,20 @@ export default {
         }
 
         if (validator.isUser(tmpBarcode)) {
+          if (this.userBarcode !== tmpBarcode && this.orderAmount !== 0) {
+            await this.createOrder();
+          }
           this.userBarcode = tmpBarcode;
           return;
         }
 
-        this.createOrder();
+        await this.createOrder();
       } else if (e.key >= "0" && e.key <= "9") {
         this.barcode += e.key;
       } else {
         // Only used for development
         if (e.key === "u") {
-          this.userBarcode = "95211893";
+          this.userBarcode = "9571189";
         } else if (e.key === "p") {
           this.addCartItem("4260107220015");
         } else if (e.key === "r") {
@@ -224,15 +227,12 @@ export default {
       newItem.count += 1;
       this.updateItem(newItem);
     },
-    createOrder() {
+    async createOrder() {
       if (this.user.uuid) {
         this.orderAmount = 0;
-        Order.api()
-          .$create({ userUuid: this.user.uuid })
-          .then(() => {
-            CartItem.deleteAll();
-            this.userBarcode = "";
-          });
+        await Order.api().$create({ userUuid: this.user.uuid });
+        await CartItem.deleteAll();
+        this.userBarcode = "";
       }
     },
     showConfirmDialog(item) {
