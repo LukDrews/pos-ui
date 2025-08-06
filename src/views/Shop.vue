@@ -78,7 +78,7 @@
         <div>
           <div class="flex flex-row justify-between pb-2">
             <span>Total:</span>
-            <span>{{ paymentTotal }}</span>
+            <span>{{ paymentTotalFormatted }}</span>
           </div>
           <div class="flex flex-row justify-between pb-2">
             <span>Todays total:</span>
@@ -155,7 +155,10 @@ export default {
         total = total.add(itemCost);
       }
 
-      return formatters.toCurrencyFormat(total.getAmount());
+      return total.getAmount();
+    },
+    paymentTotalFormatted() {
+      return formatters.toCurrencyFormat(this.paymentTotal);
     },
     dayOrder() {
       let orders = Order.query().where("userUuid", this.user.uuid).all();
@@ -190,7 +193,11 @@ export default {
         }
 
         if (validator.isUser(tmpBarcode)) {
-          if (this.userBarcode !== tmpBarcode && this.orderAmount !== 0) {
+          if (
+            this.userBarcode &&
+            this.userBarcode !== tmpBarcode &&
+            this.paymentTotal !== 0
+          ) {
             await this.createOrder();
           }
           this.userBarcode = tmpBarcode;

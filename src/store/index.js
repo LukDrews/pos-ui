@@ -13,7 +13,7 @@ const database = new VuexORM.Database();
 Object.values(Models).forEach((model) => database.register(model));
 
 // Configure urls
-const baseUrl = `${import.meta.env.VITE_API_URL}`;
+const baseUrl = `${import.meta.env.VITE_API_URL}` ?? "http://localhost:3000";
 const apiUrl = `${baseUrl}/v1/`;
 
 // Set access token for api access
