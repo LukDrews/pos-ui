@@ -58,7 +58,19 @@
         class="w-1/4 p-4 h-full bg-white rounded flex flex-col justify-between"
       >
         <div>
-          <div class="pb-4 flex flex-row justify-center">
+          <o-autocomplete
+            v-model="searchString"
+            :custom-formatter="userFormatter"
+            expanded
+            :data="filteredDataArray"
+            placeholder="User"
+            icon="search"
+            clearable
+            @select="(user) => (userBarcode = user?.barcode ?? null)"
+          >
+            <template #empty>No results found</template>
+          </o-autocomplete>
+          <div class="py-4 flex flex-row justify-center">
             <img
               class="h-32 aspect-square object-cover rounded-full border border-inherit drop-shadow"
               :src="user.imageUrl"
@@ -121,6 +133,8 @@ export default {
       userBarcode: "",
       orderAmount: 0,
 
+      searchString: "",
+
       selected: null,
       confirmDialog: false,
     };
@@ -145,6 +159,19 @@ export default {
         User.query().with("group").where("barcode", this.userBarcode).first() ??
         new User();
       return currUser;
+    },
+    users() {
+      return User.query().with("group").all();
+    },
+    filteredDataArray() {
+      return this.users.filter((user) => {
+        return (
+          user.fullName
+            .toString()
+            .toLowerCase()
+            .indexOf(this.searchString.toLowerCase()) >= 0
+        );
+      });
     },
     paymentTotal() {
       let total = Dinero();
@@ -245,6 +272,12 @@ export default {
     showConfirmDialog(item) {
       this.confirmDialog = true;
       this.selected = item;
+    },
+    userFormatter(user) {
+      if (user.group) {
+        return `${user.fullName} - ${user.group.name}`;
+      }
+      return `${user.fullName}`;
     },
   },
 };
